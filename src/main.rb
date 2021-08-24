@@ -9,11 +9,12 @@ class Window < GameWindow
     super(800, 600, false)
 
     @screen = Screen.new
-    @man = Man.new(0, 0)
+    @man = Man.new(50, 0)
   end
 
   def update
     KB.update
+    @screen.update
     @man.update(@screen)
   end
 

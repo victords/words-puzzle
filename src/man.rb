@@ -32,8 +32,12 @@ class Man
     else
       speed.x = -@speed.x
     end
-    if @bottom && KB.key_pressed?(Gosu::KB_SPACE)
+
+    stuck = (@left || @right)&.sticky?
+    if (stuck || @bottom) && KB.key_pressed?(Gosu::KB_SPACE)
       speed.y = -JUMP_SPEED
+    elsif stuck
+      @speed.y = 0 if @speed.y > 0
     end
     move(speed, screen.get_obstacles, [])
   end
