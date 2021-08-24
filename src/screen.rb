@@ -5,12 +5,13 @@ include MiniGL
 class Screen
   def initialize
     @objects = [
-      Obj.new(:wall, 0, 560, 800, 40),
-      Obj.new(:wall, 400, 380, 200, 40),
+      Obj.new(:wall, 0, 360, 600, 240),
+      Obj.new(:wall, 600, 560, 200, 40),
+      Obj.new(:wall, 400, 180, 200, 40),
       Obj.new(:wall, 0, 0, 30, 600),
       Obj.new(:wall, 770, 0, 30, 600),
-      Obj.new(:ledge, 150, 440, 180, 40),
-      Obj.new(:none, 54, 232, 77, 31)
+      Obj.new(:ledge, 150, 240, 180, 40),
+      Obj.new(:water, 600, 375, 170, 185)
     ]
   end
 
@@ -18,8 +19,13 @@ class Screen
     @objects.select { |o| o.solid? || o.semisolid? }
   end
 
+  def inside_liquid?(obj)
+    @objects.any? { |o| o != obj && o.liquid? && o.bounds.intersect?(obj.bounds) }
+  end
+
   def update
-    @objects[2].add_prop(:sticky) if KB.key_pressed?(Gosu::KB_A)
+    @objects[3].add_prop(:sticky) if KB.key_pressed?(Gosu::KB_A)
+    @objects.each(&:update)
   end
 
   def draw

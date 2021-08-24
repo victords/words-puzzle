@@ -5,8 +5,9 @@ require_relative 'constants'
 class Man
   WIDTH = 32
   HEIGHT = 64
-  SPEED = 5
+  MOVE_SPEED = 5
   JUMP_SPEED = 20
+  MAX_V_SPEED = 25
 
   include Movement
 
@@ -19,27 +20,39 @@ class Man
     @h = HEIGHT
     @speed = Vector.new
     @stored_forces = Vector.new
-    @max_speed = Vector.new(SPEED, 25)
+    @max_speed = Vector.new(MOVE_SPEED, MAX_V_SPEED)
     @mass = 1
   end
 
   def update(screen)
     speed = Vector.new
     if KB.key_down?(Gosu::KB_RIGHT)
-      speed.x += SPEED
+      speed.x += MOVE_SPEED
     elsif KB.key_down?(Gosu::KB_LEFT)
-      speed.x -= SPEED
+      speed.x -= MOVE_SPEED
     else
       speed.x = -@speed.x
     end
 
     stuck = (@left || @right)&.sticky?
-    if (stuck || @bottom) && KB.key_pressed?(Gosu::KB_SPACE)
-      speed.y = -JUMP_SPEED
+    inside_liquid = screen.inside_liquid?(self)
+
+    if (stuck || inside_liquid || @bottom) && KB.key_pressed?(Gosu::KB_SPACE)
+      speed.y = -JUMP_SPEED * (inside_liquid ? Physics::LIQUID_GRAVITY_SCALE : 1)
     elsif stuck
       @speed.y = 0 if @speed.y > 0
     end
+
+    if inside_liquid
+      prev_g = G.gravity.y
+      G.gravity.y *= Physics::LIQUID_GRAVITY_SCALE
+      @max_speed.y *= Physics::LIQUID_GRAVITY_SCALE
+    end
     move(speed, screen.get_obstacles, [])
+    if inside_liquid
+      G.gravity.y = prev_g
+      @max_speed.y = MAX_V_SPEED
+    end
   end
 
   def draw
