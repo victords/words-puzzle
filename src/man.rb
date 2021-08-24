@@ -6,6 +6,7 @@ class Man
   WIDTH = 32
   HEIGHT = 64
   SPEED = 5
+  JUMP_SPEED = 20
 
   include Movement
 
@@ -31,12 +32,16 @@ class Man
     else
       speed.x = -@speed.x
     end
+    if @bottom && KB.key_pressed?(Gosu::KB_SPACE)
+      speed.y = -JUMP_SPEED
+    end
     move(speed, screen.get_obstacles, [])
   end
 
   def draw
-    G.window.draw_triangle(@x + @w / 2, @y, Color::BLACK_A,
+    G.window.draw_triangle(@x + @w / 2, @y + 12, Color::BLACK_A,
                            @x, @y + @h, Color::BLACK_A,
                            @x + @w, @y + @h, Color::BLACK_A, 0)
+    G.window.draw_circle(@x + 4, @y, 24, Color::BLACK_A)
   end
 end

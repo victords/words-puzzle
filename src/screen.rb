@@ -5,7 +5,8 @@ include MiniGL
 class Screen
   def initialize
     @objects = [
-      Obj.new(:wall, 0, 560, 800, 40)
+      Obj.new(:wall, 0, 560, 800, 40),
+      Obj.new(:wall, 400, 380, 200, 40)
     ]
   end
 
