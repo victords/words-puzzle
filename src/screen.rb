@@ -7,8 +7,8 @@ class Screen
     @objects = [
       Obj.new(:wall, 0, 360, 600, 240),
       Obj.new(:wall, 600, 560, 200, 40),
-      Obj.new(:wall, 400, 180, 200, 40),
-      Obj.new(:wall, 0, 0, 30, 600),
+      Obj.new(:wall, 400, 180, 200, 40, [:bouncy]),
+      Obj.new(:wall, 0, 0, 30, 600, [:bouncy]),
       Obj.new(:wall, 770, 0, 30, 600),
       Obj.new(:ledge, 150, 240, 180, 40),
       Obj.new(:water, 600, 375, 170, 185)
@@ -24,7 +24,6 @@ class Screen
   end
 
   def update
-    @objects[3].add_prop(:sticky) if KB.key_pressed?(Gosu::KB_A)
     @objects.each(&:update)
   end
 

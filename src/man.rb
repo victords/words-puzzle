@@ -5,9 +5,11 @@ require_relative 'constants'
 class Man
   WIDTH = 32
   HEIGHT = 64
-  MOVE_SPEED = 5
-  JUMP_SPEED = 20
+  MOVE_FORCE = 0.5
+  JUMP_FORCE = 20
+  MAX_H_SPEED = 5
   MAX_V_SPEED = 25
+  BRAKE_RATE = 0.15
 
   include Movement
 
@@ -20,25 +22,25 @@ class Man
     @h = HEIGHT
     @speed = Vector.new
     @stored_forces = Vector.new
-    @max_speed = Vector.new(MOVE_SPEED, MAX_V_SPEED)
+    @max_speed = Vector.new(MAX_H_SPEED, MAX_V_SPEED)
     @mass = 1
   end
 
   def update(screen)
     speed = Vector.new
     if KB.key_down?(Gosu::KB_RIGHT)
-      speed.x += MOVE_SPEED
+      speed.x += MOVE_FORCE
     elsif KB.key_down?(Gosu::KB_LEFT)
-      speed.x -= MOVE_SPEED
+      speed.x -= MOVE_FORCE
     else
-      speed.x = -@speed.x
+      speed.x = -BRAKE_RATE * @speed.x
     end
 
     stuck = (@left || @right)&.sticky?
     inside_liquid = screen.inside_liquid?(self)
 
     if (stuck || inside_liquid || @bottom) && KB.key_pressed?(Gosu::KB_SPACE)
-      speed.y = -JUMP_SPEED * (inside_liquid ? Physics::LIQUID_GRAVITY_SCALE : 1)
+      speed.y = -JUMP_FORCE * (inside_liquid ? Physics::LIQUID_GRAVITY_SCALE : 1)
     elsif stuck
       @speed.y = 0 if @speed.y > 0
     end
@@ -52,6 +54,16 @@ class Man
     if inside_liquid
       G.gravity.y = prev_g
       @max_speed.y = MAX_V_SPEED
+    end
+
+    if @left&.bouncy? || @right&.bouncy?
+      @stored_forces.x = @left ? MAX_H_SPEED : -MAX_H_SPEED
+    end
+    if @top&.bouncy? && @speed.y == 0
+      @stored_forces.y = -@prev_speed.y
+    end
+    if @bottom&.bouncy? && @speed.y == 0
+      @stored_forces.y = -JUMP_FORCE
     end
   end
 

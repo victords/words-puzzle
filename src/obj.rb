@@ -14,14 +14,14 @@ class Obj
 
   WAVE_SIZE = 30
 
-  def initialize(type, x, y, w, h)
+  def initialize(type, x, y, w, h, props = [])
     @type = type
     @x = x
     @y = y
     @w = w
     @h = h
 
-    @props = DEFAULT_PROPS[type].clone || Set.new
+    @props = (DEFAULT_PROPS[type].clone || Set.new) + props
 
     @timer = 0
   end
