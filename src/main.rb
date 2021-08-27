@@ -8,7 +8,9 @@ class Window < GameWindow
   def initialize
     super(800, 600, false)
 
-    @screen = Screen.new
+    Res.prefix = File.expand_path(__FILE__).split('/')[0..-3].join('/') + '/data'
+
+    @screen = Screen.new(1)
     @man = Man.new(50, 0)
   end
 

@@ -3,16 +3,16 @@ require_relative 'obj'
 include MiniGL
 
 class Screen
-  def initialize
-    @objects = [
-      Obj.new(:wall, 0, 360, 600, 240),
-      Obj.new(:wall, 600, 560, 200, 40),
-      Obj.new(:wall, 400, 180, 200, 40, [:bouncy]),
-      Obj.new(:wall, 0, 0, 30, 600, [:bouncy]),
-      Obj.new(:wall, 770, 0, 30, 600),
-      Obj.new(:ledge, 150, 240, 180, 40),
-      Obj.new(:water, 600, 375, 170, 185)
-    ]
+  def initialize(num)
+    @objects = []
+    File.open("#{Res.prefix}/screen/#{num}.txt") do |f|
+      f.each_line do |l|
+        data = l.chomp.split(':')
+        bounds = data[1].split(',').map(&:to_i)
+        @objects << Obj.new(data[0].to_sym, bounds[0], bounds[1], bounds[2], bounds[3],
+                            data[2]&.split(',')&.map(&:to_sym))
+      end
+    end
   end
 
   def get_obstacles

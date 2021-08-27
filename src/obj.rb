@@ -7,21 +7,22 @@ class Obj
   attr_reader :x, :y, :w, :h
 
   DEFAULT_PROPS = {
-    wall: Set[:solid],
-    ledge: Set[:semisolid],
-    water: Set[:liquid]
+    floor: [:solid],
+    wall: [:solid],
+    ledge: [:semisolid],
+    water: [:liquid]
   }.freeze
 
   WAVE_SIZE = 30
 
-  def initialize(type, x, y, w, h, props = [])
+  def initialize(type, x, y, w, h, props)
     @type = type
     @x = x
     @y = y
     @w = w
     @h = h
 
-    @props = (DEFAULT_PROPS[type].clone || Set.new) + props
+    @props = Set.new(DEFAULT_PROPS[type]) + (props || [])
 
     @timer = 0
   end
@@ -55,11 +56,12 @@ class Obj
 
   def draw
     case @type
-    when :wall
-      G.window.draw_quad(@x, @y, Color::BLACK_A,
-                         @x + @w, @y, Color::BLACK_A,
-                         @x, @y + @h, Color::BLACK_A,
-                         @x + @w, @y + @h, Color::BLACK_A, 0)
+    when :wall, :floor
+      color = @type == :wall ? Color::BLACK_A : Color::BROWN_A
+      G.window.draw_quad(@x, @y, color,
+                         @x + @w, @y, color,
+                         @x, @y + @h, color,
+                         @x + @w, @y + @h, color, 0)
     when :ledge
       G.window.draw_quad(@x, @y, Color::BLACK_A,
                          @x + @w, @y, Color::BLACK_A,
