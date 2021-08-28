@@ -2,12 +2,13 @@ require 'minigl'
 require_relative 'screen'
 require_relative 'man'
 require_relative 'hud'
+require_relative 'text'
 
 include MiniGL
 
 class Window < GameWindow
   def initialize
-    super(Game::SCREEN_WIDTH, Game::SCREEN_HEIGHT, false)
+    super(Game::SCREEN_WIDTH, Game::SCREEN_HEIGHT)
 
     Res.prefix = File.expand_path(__FILE__).split('/')[0..-3].join('/') + '/data'
 
@@ -19,6 +20,8 @@ class Window < GameWindow
 
     @screen_cache = {}
     load_screen(1)
+
+    Text.init
   end
 
   def load_screen(num, entrance = nil)
@@ -41,6 +44,7 @@ class Window < GameWindow
     @man.update(@screen)
 
     toggle_fullscreen if KB.key_pressed?(Gosu::KB_F4)
+    close if KB.key_pressed?(Gosu::KB_ESCAPE)
   end
 
   def draw_circle(x, y, diam, color, detail = nil)
@@ -65,6 +69,10 @@ class Window < GameWindow
     @screen.draw
     @man.draw
     @hud.draw
+
+    Text.draw('ABCDEFGHIJKLMNOPQRSTUVWXYZ', 300, 300, 64)
+    Text.draw('ABCDEFGHIJKLMNOPQRSTUVWXYZ', 300, 380, 48)
+    Text.draw('ABCDEFGHIJKLMNOPQRSTUVWXYZ', 300, 440, 32)
   end
 end
 
