@@ -71,7 +71,7 @@ class Obj
       G.window.draw_quad(@x, @y, Color::WATER,
                          @x + @w, @y, Color::WATER,
                          @x, @y + @h, Color::WATER,
-                         @x + @w, @y + @h, Color::WATER, 0)
+                         @x + @w, @y + @h, Color::WATER, 1)
       wave_count = (@w.to_f / WAVE_SIZE).ceil
       (-2...wave_count).each do |i|
         x = @x + i * WAVE_SIZE + @timer
@@ -82,31 +82,31 @@ class Obj
             G.window.draw_quad(@x, @y, Color::WATER,
                                x + WAVE_SIZE, @y, Color::WATER,
                                x + WAVE_SIZE, @y - WAVE_SIZE * 0.5, Color::WATER,
-                               @x, @y - y, Color::WATER, 0)
+                               @x, @y - y, Color::WATER, 1)
           else
             y = (WAVE_SIZE - @x + x) * 0.5
             G.window.draw_triangle(@x, @y, Color::WATER,
                                    x + WAVE_SIZE, @y, Color::WATER,
-                                   @x, @y - y, Color::WATER, 0)
+                                   @x, @y - y, Color::WATER, 1)
           end
         elsif x + WAVE_SIZE > @x + @w
           if i.even?
             y = (@x + @w - x) * 0.5
             G.window.draw_triangle(x, @y, Color::WATER,
                                    @x + @w, @y, Color::WATER,
-                                   @x + @w, @y - y, Color::WATER, 0)
+                                   @x + @w, @y - y, Color::WATER, 1)
           else
             y = (x + WAVE_SIZE - @x - @w) * 0.5
             G.window.draw_quad(x, @y, Color::WATER,
                                @x + @w, @y, Color::WATER,
                                @x + @w, @y - y, Color::WATER,
-                               x, @y - WAVE_SIZE * 0.5, Color::WATER, 0)
+                               x, @y - WAVE_SIZE * 0.5, Color::WATER, 1)
           end
         else
           top_x = i.even? ? x + WAVE_SIZE : x
           G.window.draw_triangle(x, @y, Color::WATER,
                                  x + WAVE_SIZE, @y, Color::WATER,
-                                 top_x, @y - WAVE_SIZE * 0.5, Color::WATER, 0)
+                                 top_x, @y - WAVE_SIZE * 0.5, Color::WATER, 1)
         end
       end
     end

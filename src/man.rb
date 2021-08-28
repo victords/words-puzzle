@@ -14,7 +14,7 @@ class Man
   include Movement
 
   attr_reader :x, :y, :w, :h
-  attr_writer :on_leave
+  attr_writer :on_leave, :on_mana_change
 
   def initialize
     @w = WIDTH
@@ -23,6 +23,7 @@ class Man
     @stored_forces = Vector.new
     @max_speed = Vector.new(MAX_H_SPEED, MAX_V_SPEED)
     @mass = 1
+    @mana = 3
   end
 
   def set_position(x, y = nil)
@@ -80,6 +81,8 @@ class Man
     elsif @x + @w > G.window.width + @w / 2
       @on_leave&.call(:right)
     end
+
+    @on_mana_change.call(@mana -= 1) if KB.key_pressed?(Gosu::KB_Z)
   end
 
   def draw

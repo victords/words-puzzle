@@ -4,6 +4,7 @@ module Color
   BLACK_A = 0xff000000
   WHITE_A = 0xffffffff
   BROWN_A = 0xff996600
+  LIME_A = 0xff00ff00
   BLACK_TRANSP = 0
   WHITE_TRANSP = 0x00ffffff
   RED_A = 0xffff0000

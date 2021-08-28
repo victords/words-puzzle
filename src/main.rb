@@ -1,6 +1,7 @@
 require 'minigl'
 require_relative 'screen'
 require_relative 'man'
+require_relative 'hud'
 
 include MiniGL
 
@@ -10,8 +11,14 @@ class Window < GameWindow
 
     Res.prefix = File.expand_path(__FILE__).split('/')[0..-3].join('/') + '/data'
 
+    @hud = Hud.new
+    @hud.update_mana(3)
+    @hud.update_max_mana(3)
+
     @man = Man.new
     @man.on_leave = method(:handle_leave)
+    @man.on_mana_change = @hud.method(:update_mana)
+
     @screen_cache = {}
     load_screen(1)
   end
@@ -56,6 +63,7 @@ class Window < GameWindow
     clear Color::WHITE
     @screen.draw
     @man.draw
+    @hud.draw
   end
 end
 

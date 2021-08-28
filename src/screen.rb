@@ -22,6 +22,13 @@ class Screen
         end
       end
     end
+
+    unless @exits.has_key?(:left)
+      @objects << Obj.new(:immutable, -1, 0, 1, 600, [:solid])
+    end
+    unless @exits.has_key?(:right)
+      @objects << Obj.new(:immutable, 800, 0, 1, 600, [:solid])
+    end
   end
 
   def entrance(id)
