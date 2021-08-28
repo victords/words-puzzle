@@ -1,7 +1,10 @@
+entr:150,0
+entr:50,296:right
+entr:700,296:left
+exit:left:2
+exit:right:3
 floor:0,360,600,240
 floor:600,560,200,40
 wall:400,180,200,40:bouncy
-wall:0,0,30,600:bouncy
-wall:770,0,30,600
 ledge:150,240,180,40
 water:600,375,170,185

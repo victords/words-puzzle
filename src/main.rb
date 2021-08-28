@@ -10,8 +10,24 @@ class Window < GameWindow
 
     Res.prefix = File.expand_path(__FILE__).split('/')[0..-3].join('/') + '/data'
 
-    @screen = Screen.new(1)
-    @man = Man.new(50, 0)
+    @man = Man.new
+    @man.on_leave = method(:handle_leave)
+    @screen_cache = {}
+    load_screen(1)
+  end
+
+  def load_screen(num, entrance = nil)
+    if @screen_cache.has_key?(num)
+      @screen = @screen_cache[num]
+      @screen.reset
+    else
+      @screen = @screen_cache[num] = Screen.new(num)
+    end
+    @man.set_position(@screen.entrance(entrance))
+  end
+
+  def handle_leave(dir)
+    load_screen(@screen.exit(dir), dir)
   end
 
   def update

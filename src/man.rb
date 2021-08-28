@@ -14,16 +14,25 @@ class Man
   include Movement
 
   attr_reader :x, :y, :w, :h
+  attr_writer :on_leave
 
-  def initialize(x, y)
-    @x = x
-    @y = y
+  def initialize
     @w = WIDTH
     @h = HEIGHT
     @speed = Vector.new
     @stored_forces = Vector.new
     @max_speed = Vector.new(MAX_H_SPEED, MAX_V_SPEED)
     @mass = 1
+  end
+
+  def set_position(x, y = nil)
+    if x.is_a?(Vector)
+      @x = x.x
+      @y = x.y
+    else
+      @x = x
+      @y = y
+    end
   end
 
   def update(screen)
@@ -64,6 +73,12 @@ class Man
     end
     if @bottom&.bouncy? && @speed.y == 0
       @stored_forces.y = -JUMP_FORCE
+    end
+
+    if @x < -@w / 2
+      @on_leave&.call(:left)
+    elsif @x + @w > G.window.width + @w / 2
+      @on_leave&.call(:right)
     end
   end
 
