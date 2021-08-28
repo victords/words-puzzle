@@ -11,10 +11,13 @@ class Text
           data = l.chomp.split(':')
           @font[data[0]] = {
             width: data[1].to_f,
-            lines: data[2].split(';').map{|s| s.split(',').map(&:to_f)}
+            lines: data[2].split(';').map{|s| s.split(',').map(&:to_f)},
+            base: data[3]
           }
-          @font[data[0]][:lines] += @font[data[3]][:lines] if data[3]
         end
+      end
+      @font.each do |_, v|
+        v[:lines] += @font[v[:base]][:lines] if v[:base]
       end
     end
 
