@@ -14,3 +14,14 @@ end
 module Physics
   LIQUID_GRAVITY_SCALE = 0.33
 end
+
+module Game
+  SCREEN_WIDTH = 1366
+  SCREEN_HEIGHT = 768
+  INITIAL_MAX_MANA = 3
+  BG_MAP = {
+    1 => 1,
+    2 => 1,
+    3 => 1,
+  }.freeze
+end

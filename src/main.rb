@@ -7,13 +7,11 @@ include MiniGL
 
 class Window < GameWindow
   def initialize
-    super(800, 600, false)
+    super(Game::SCREEN_WIDTH, Game::SCREEN_HEIGHT, false)
 
     Res.prefix = File.expand_path(__FILE__).split('/')[0..-3].join('/') + '/data'
 
-    @hud = Hud.new
-    @hud.update_mana(3)
-    @hud.update_max_mana(3)
+    @hud = Hud.new(Game::INITIAL_MAX_MANA)
 
     @man = Man.new
     @man.on_leave = method(:handle_leave)
@@ -41,9 +39,12 @@ class Window < GameWindow
     KB.update
     @screen.update
     @man.update(@screen)
+
+    toggle_fullscreen if KB.key_pressed?(Gosu::KB_F4)
   end
 
-  def draw_circle(x, y, diam, color, detail = 12)
+  def draw_circle(x, y, diam, color, detail = nil)
+    detail ||= 12
     r = diam / 2.0
     c_x = x + r
     c_y = y + r
@@ -60,7 +61,7 @@ class Window < GameWindow
   end
 
   def draw
-    clear Color::WHITE
+    clear @screen.bg_color
     @screen.draw
     @man.draw
     @hud.draw

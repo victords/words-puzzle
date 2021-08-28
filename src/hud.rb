@@ -1,4 +1,8 @@
 class Hud
+  def initialize(max_mana)
+    @mana = @max_mana = max_mana
+  end
+
   def update_mana(amount)
     @mana = amount
   end

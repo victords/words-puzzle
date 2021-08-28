@@ -13,7 +13,7 @@ class Obj
     water: [:liquid]
   }.freeze
 
-  WAVE_SIZE = 30
+  WAVE_SIZE = 20
 
   def initialize(type, x, y, w, h, props)
     @type = type

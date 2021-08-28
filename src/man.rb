@@ -50,20 +50,21 @@ class Man
     inside_liquid = screen.inside_liquid?(self)
 
     if (stuck || inside_liquid || @bottom) && KB.key_pressed?(Gosu::KB_SPACE)
-      speed.y = -JUMP_FORCE * (inside_liquid ? Physics::LIQUID_GRAVITY_SCALE : 1)
+      speed.y = -JUMP_FORCE
     elsif stuck
       @speed.y = 0 if @speed.y > 0
     end
 
     if inside_liquid
-      prev_g = G.gravity.y
-      G.gravity.y *= Physics::LIQUID_GRAVITY_SCALE
-      @max_speed.y *= Physics::LIQUID_GRAVITY_SCALE
+      prev_g = G.gravity
+      G.gravity *= Physics::LIQUID_GRAVITY_SCALE
+      @max_speed *= Physics::LIQUID_GRAVITY_SCALE
+      speed *= Physics::LIQUID_GRAVITY_SCALE
     end
     move(speed, screen.get_obstacles, [])
     if inside_liquid
-      G.gravity.y = prev_g
-      @max_speed.y = MAX_V_SPEED
+      G.gravity = prev_g
+      @max_speed = Vector.new(MAX_H_SPEED, MAX_V_SPEED)
     end
 
     if @left&.bouncy? || @right&.bouncy?
