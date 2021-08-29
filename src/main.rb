@@ -70,9 +70,9 @@ class Window < GameWindow
     @man.draw
     @hud.draw
 
-    Text.draw('ABCDEFGHIJKLMNOPQRSTUVWXYZ', 300, 300, 64, Color::BLACK_A, 4)
-    Text.draw('ABCDEFGHIJKLMNOPQRSTUVWXYZ', 300, 380, 48, Color::WHITE_A, 3)
-    Text.draw('ABCDEFGHIJKLMNOPQRSTUVWXYZ', 300, 440, 32)
+    Text.draw('atenção vários avôs e avós e índios em emergência de saúde à vista', 50, 300, 64, Color::BLACK_A, 4)
+    Text.draw('atenção vários avôs e avós e índios em emergência de saúde à vista', 50, 380, 48, Color::WHITE_A, 3)
+    Text.draw('atenção vários avôs e avós e índios em emergência de saúde à vista', 50, 440, 32)
   end
 end
 

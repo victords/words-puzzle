@@ -22,11 +22,16 @@ class Text
     end
 
     def draw(text, x, y, size, color = Color::BLACK_A, thickness = 2)
-      space_width = size * 0.1
-      text.each_char do |c|
+      space_width = size * 0.6
+      letter_space_width = size * 0.1
+      text.upcase.each_char do |c|
+        if c == ' '
+          x += space_width
+          next
+        end
         next unless @font[c]
         v = MiniGL::Vector.new
-        width = @font[c][:width] * 0.6 * size
+        width = @font[c][:width] * space_width
         @font[c][:lines].each do |l|
           e1 = Vector.new(x + width * l[0], y + size * l[1])
           e2 = Vector.new(x + width * l[2], y + size * l[3])
@@ -42,7 +47,7 @@ class Text
                              p3.x, p3.y, color,
                              p4.x, p4.y, color, 0)
         end
-        x += width + space_width
+        x += width + letter_space_width
       end
     end
   end

@@ -4,7 +4,7 @@ entr:700,296:left
 exit:left:2
 exit:right:3
 floor:0,528,700,240
-floor:700,560,700,40
+floor:700,728,700,40
+water:700,548,700,180
 wall:400,180,200,40:bouncy
 ledge:150,240,180,40
-water:600,375,170,185
