@@ -1,14 +1,13 @@
 module Color
-  BLACK = 0
-  WHITE = 0xffffff
-  BLACK_A = 0xff000000
-  WHITE_A = 0xffffffff
-  BROWN_A = 0xff996600
-  LIME_A = 0xff00ff00
-  BLACK_TRANSP = 0
-  WHITE_TRANSP = 0x00ffffff
-  RED_A = 0xffff0000
+  BLACK = 0xff000000
+  WHITE = 0xffffffff
+  BROWN = 0xff996600
+  LIME = 0xff00ff00
+  RED = 0xffff0000
   WATER = 0x8066ccff
+  DARK_BLUE = 0xff000099
+  BEIGE = 0xffffee80
+  BLACK_TRANSP = 0
 end
 
 module Physics
@@ -16,8 +15,8 @@ module Physics
 end
 
 module Game
-  SCREEN_WIDTH = 1366
-  SCREEN_HEIGHT = 768
+  SCREEN_WIDTH = 1280
+  SCREEN_HEIGHT = 720
   INITIAL_MAX_MANA = 3
   BG_MAP = {
     1 => 1,

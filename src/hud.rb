@@ -12,15 +12,15 @@ class Hud
   end
 
   def draw
-    G.window.draw_quad(10, 10, Color::BLACK_A,
-                       12 + @max_mana * 82, 10, Color::BLACK_A,
-                       10, 50, Color::BLACK_A,
-                       12 + @max_mana * 82, 50, Color::BLACK_A, 100)
+    G.window.draw_quad(10, 10, Color::BLACK,
+                       12 + @max_mana * 82, 10, Color::BLACK,
+                       10, 50, Color::BLACK,
+                       12 + @max_mana * 82, 50, Color::BLACK, 100)
     (0...@mana).each do |i|
-      G.window.draw_quad(12 + i * 82, 12, Color::LIME_A,
-                         92 + i * 82, 12, Color::LIME_A,
-                         12 + i * 82, 48, Color::LIME_A,
-                         92 + i * 82, 48, Color::LIME_A, 101)
+      G.window.draw_quad(12 + i * 82, 12, Color::LIME,
+                         92 + i * 82, 12, Color::LIME,
+                         12 + i * 82, 48, Color::LIME,
+                         92 + i * 82, 48, Color::LIME, 101)
     end
   end
 end

@@ -57,21 +57,12 @@ class Obj
   def draw
     case @type
     when :wall, :floor
-      color = @type == :wall ? Color::BLACK_A : Color::BROWN_A
-      G.window.draw_quad(@x, @y, color,
-                         @x + @w, @y, color,
-                         @x, @y + @h, color,
-                         @x + @w, @y + @h, color, 0)
+      color = @type == :wall ? Color::BLACK : Color::BROWN
+      G.window.draw_rect(@x, @y, @w, @h, color)
     when :ledge
-      G.window.draw_quad(@x, @y, Color::BLACK_A,
-                         @x + @w, @y, Color::BLACK_A,
-                         @x, @y + @h, Color::BLACK_TRANSP,
-                         @x + @w, @y + @h, Color::BLACK_TRANSP, 0)
+      G.window.draw_rect(@x, @y, @w, @h, Color::BLACK, Color::BLACK_TRANSP)
     when :water
-      G.window.draw_quad(@x, @y, Color::WATER,
-                         @x + @w, @y, Color::WATER,
-                         @x, @y + @h, Color::WATER,
-                         @x + @w, @y + @h, Color::WATER, 1)
+      G.window.draw_rect(@x, @y, @w, @h, Color::WATER, nil, 1)
       wave_count = (@w.to_f / WAVE_SIZE).ceil
       (-2...wave_count).each do |i|
         x = @x + i * WAVE_SIZE + @timer

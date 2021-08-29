@@ -21,7 +21,7 @@ class Text
       end
     end
 
-    def draw(text, x, y, size, color = Color::BLACK_A, thickness = 2)
+    def draw(text, x, y, size, color = Color::BLACK, thickness = 2)
       space_width = size * 0.6
       letter_space_width = size * 0.1
       text.upcase.each_char do |c|

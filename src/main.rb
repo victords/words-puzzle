@@ -47,21 +47,29 @@ class Window < GameWindow
     close if KB.key_pressed?(Gosu::KB_ESCAPE)
   end
 
-  def draw_circle(x, y, diam, color, detail = nil)
+  def draw_circle(x, y, diam, color, detail = nil, z_index = 0)
     detail ||= 12
     r = diam / 2.0
     c_x = x + r
     c_y = y + r
     d_f = detail.to_f
+    last_a = last_x = last_y = nil
     (0...detail).each do |i|
-      a1 = i / d_f * 2 * Math::PI
+      a1 = last_a || i / d_f * 2 * Math::PI
       a2 = (i + 1) / d_f * 2 * Math::PI
-      x1 = c_x + r * Math.cos(a1)
-      y1 = c_y + r * Math.sin(a1)
+      x1 = last_x || c_x + r * Math.cos(a1)
+      y1 = last_y || c_y + r * Math.sin(a1)
       x2 = c_x + r * Math.cos(a2)
       y2 = c_y + r * Math.sin(a2)
-      draw_triangle(c_x, c_y, color, x1, y1, color, x2, y2, color, 0)
+      draw_triangle(c_x, c_y, color, x1, y1, color, x2, y2, color, z_index)
+      last_a = a2
+      last_x = x2
+      last_y = y2
     end
+  end
+
+  def draw_rect(x, y, w, h, color, color2 = nil, z_index = 0)
+    draw_quad(x, y, color, x + w, y, color, x, y + h, color2 || color, x + w, y + h, color2 || color, z_index)
   end
 
   def draw
@@ -69,10 +77,6 @@ class Window < GameWindow
     @screen.draw
     @man.draw
     @hud.draw
-
-    Text.draw('atenção vários avôs e avós e índios em emergência de saúde à vista', 50, 300, 64, Color::BLACK_A, 4)
-    Text.draw('atenção vários avôs e avós e índios em emergência de saúde à vista', 50, 380, 48, Color::WHITE_A, 3)
-    Text.draw('atenção vários avôs e avós e índios em emergência de saúde à vista', 50, 440, 32)
   end
 end
 

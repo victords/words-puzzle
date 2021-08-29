@@ -43,10 +43,7 @@ class Screen
         case data[0]
         when 'r'
           @bg_procs << lambda {
-            G.window.draw_quad(coords[0], coords[1], color,
-                               coords[2] - coords[0], coords[1], color,
-                               coords[0], coords[3] - coords[1], color2 || color,
-                               coords[2] - coords[0], coords[3] - coords[1], color2 || color, 0)
+            G.window.draw_rect(coords[0], coords[1], coords[2], coords[3], color, color2)
           }
         when 't'
           @bg_procs << lambda {

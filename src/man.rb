@@ -11,6 +11,8 @@ class Man
   MAX_V_SPEED = 25
   BRAKE_RATE = 0.15
 
+  ANIM_IDLE_CYCLE = 90
+
   include Movement
 
   attr_reader :x, :y, :w, :h
@@ -24,6 +26,8 @@ class Man
     @max_speed = Vector.new(MAX_H_SPEED, MAX_V_SPEED)
     @mass = 1
     @mana = 3
+
+    @anim_frame = 0
   end
 
   def set_position(x, y = nil)
@@ -84,12 +88,27 @@ class Man
     end
 
     @on_mana_change.call(@mana -= 1) if KB.key_pressed?(Gosu::KB_Z)
+
+    # animation
+    rate = (@anim_frame >= ANIM_IDLE_CYCLE / 2 ? ANIM_IDLE_CYCLE - @anim_frame : @anim_frame).to_f / ANIM_IDLE_CYCLE
+    @head_top = rate * 4
+    @vest_offset = rate * 3
+
+    @anim_frame += 1
+    @anim_frame = 0 if @anim_frame == ANIM_IDLE_CYCLE
   end
 
   def draw
-    G.window.draw_triangle(@x + @w / 2, @y + 12, Color::BLACK_A,
-                           @x, @y + @h, Color::BLACK_A,
-                           @x + @w, @y + @h, Color::BLACK_A, 0)
-    G.window.draw_circle(@x + 4, @y, 24, Color::BLACK_A)
+    G.window.draw_triangle(@x + @w / 2, @y + @head_top + 5, Color::DARK_BLUE,
+                           @x - @vest_offset, @y + @h, Color::DARK_BLUE,
+                           @x + @w + @vest_offset, @y + @h, Color::DARK_BLUE, 0)
+    G.window.draw_circle(@x + 4, @y + @head_top, 24, Color::BEIGE)
+    G.window.draw_rect(@x + @w / 2 - 7, @y + @head_top + 6, 4, 8, Color::BLACK)
+    G.window.draw_rect(@x + @w / 2 + 3, @y + @head_top + 6, 4, 8, Color::BLACK)
+    G.window.draw_triangle(@x + @w / 2, @y + @head_top - 20, Color::DARK_BLUE,
+                           @x + @w / 2 - 12, @y + @head_top + 3, Color::DARK_BLUE,
+                           @x + @w / 2 + 12, @y + @head_top + 3, Color::DARK_BLUE, 0)
+    G.window.draw_circle(@x - 5 - @vest_offset, @y + @head_top / 2 + 35, 12, Color::BEIGE)
+    G.window.draw_circle(@x + @w - 7 + @vest_offset, @y + @head_top / 2 + 35, 12, Color::BEIGE)
   end
 end
