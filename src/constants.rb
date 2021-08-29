@@ -11,7 +11,7 @@ module Color
 end
 
 module Physics
-  LIQUID_GRAVITY_SCALE = 0.33
+  LIQUID_GRAVITY_SCALE = 0.4
 end
 
 module Game
