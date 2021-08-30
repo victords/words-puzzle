@@ -3,8 +3,6 @@ include MiniGL
 require_relative 'constants'
 
 class Man
-  WIDTH = 32
-  HEIGHT = 64
   MOVE_FORCE = 0.5
   JUMP_FORCE = 15
   MAX_H_SPEED = 5
@@ -17,11 +15,11 @@ class Man
   include Movement
 
   attr_reader :x, :y, :w, :h
-  attr_writer :on_leave, :on_mana_change
+  attr_writer :on_leave, :on_start_spell, :on_mana_change
 
   def initialize
-    @w = WIDTH
-    @h = HEIGHT
+    @w = Physics::MAN_WIDTH
+    @h = Physics::MAN_HEIGHT
     @speed = Vector.new
     @stored_forces = Vector.new
     @max_speed = Vector.new(MAX_H_SPEED, MAX_V_SPEED)
@@ -88,7 +86,7 @@ class Man
       @on_leave&.call(:right)
     end
 
-    @on_mana_change.call(@mana -= 1) if KB.key_pressed?(Gosu::KB_Z)
+    @on_start_spell.call(@x, @y) if KB.key_pressed?(Gosu::KB_Z)
 
     # ========================== animation ===========================
     walking = @speed.x.abs > G.min_speed.x

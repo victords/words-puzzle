@@ -16,6 +16,7 @@ class Window < GameWindow
 
     @man = Man.new
     @man.on_leave = method(:handle_leave)
+    @man.on_start_spell = @hud.method(:start_spell)
     @man.on_mana_change = @hud.method(:update_mana)
 
     @screen_cache = {}

@@ -11,6 +11,8 @@ module Color
 end
 
 module Physics
+  MAN_WIDTH = 32
+  MAN_HEIGHT = 64
   LIQUID_GRAVITY_SCALE = 0.4
 end
 
