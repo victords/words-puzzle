@@ -21,7 +21,9 @@ class Text
       end
     end
 
-    def draw(text, x, y, size, color = Color::BLACK, thickness = 2)
+    def draw(text, x, y, size, center = false, color = Color::BLACK, thickness = 2, z_index = 0)
+      x -= measure(text, size) / 2 if center
+
       space_width = size * 0.6
       letter_space_width = size * 0.1
       text.upcase.each_char do |c|
@@ -45,10 +47,14 @@ class Text
           G.window.draw_quad(p1.x, p1.y, color,
                              p2.x, p2.y, color,
                              p3.x, p3.y, color,
-                             p4.x, p4.y, color, 0)
+                             p4.x, p4.y, color, z_index)
         end
         x += width + letter_space_width
       end
+    end
+
+    def measure(text, size)
+      text.upcase.each_char.reduce(0) { |w, c| w + size * 0.6 * (c == ' ' ? 1 : @font[c][:width]) } + size * 0.1 * (text.size - 1)
     end
   end
 end

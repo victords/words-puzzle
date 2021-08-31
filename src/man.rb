@@ -15,7 +15,11 @@ class Man
   include Movement
 
   attr_reader :x, :y, :w, :h
-  attr_writer :on_leave, :on_start_spell, :on_mana_change
+  attr_writer :on_leave,
+              :on_start_spell,
+              :on_update_spell,
+              :on_end_spell,
+              :on_mana_change
 
   def initialize
     @w = Physics::MAN_WIDTH
@@ -25,6 +29,8 @@ class Man
     @max_speed = Vector.new(MAX_H_SPEED, MAX_V_SPEED)
     @mass = 1
     @mana = 3
+    @spell_objs = [:wall, :ledge, :water]
+    @spell_props = [:sticky, :bouncy, :semisolid]
 
     @anim_frame = 0
   end
@@ -40,6 +46,20 @@ class Man
   end
 
   def update(screen)
+    if @spell
+      if KB.key_pressed?(Gosu::KB_X)
+        @spell = nil
+        @on_end_spell&.call
+      elsif KB.key_pressed?(Gosu::KB_Z) && @spell[:state] == :obj
+        @spell[:state] = :prop
+      elsif KB.key_pressed?(Gosu::KB_DOWN)
+        change_spell_word(-1)
+      elsif KB.key_pressed?(Gosu::KB_UP)
+        change_spell_word(1)
+      end
+      return
+    end
+
     speed = Vector.new
     if KB.key_down?(Gosu::KB_RIGHT)
       speed.x += MOVE_FORCE
@@ -86,7 +106,10 @@ class Man
       @on_leave&.call(:right)
     end
 
-    @on_start_spell.call(@x, @y) if KB.key_pressed?(Gosu::KB_Z)
+    if KB.key_pressed?(Gosu::KB_Z)
+      @spell = { obj: @spell_objs[0], prop: @spell_props[0], state: :obj }
+      @on_start_spell.call(@x, @y, @spell[:obj].to_s + 's', @spell[:prop].to_s)
+    end
 
     # ========================== animation ===========================
     walking = @speed.x.abs > G.min_speed.x
@@ -106,6 +129,17 @@ class Man
 
     @anim_frame += 1
     @anim_frame = 0 if @anim_frame == cycle_time
+  end
+
+  def change_spell_word(delta)
+    word = @spell[:state]
+    list = word == :obj ? @spell_objs : @spell_props
+    index = list.index(@spell[word])
+    index += delta
+    index = 0 if index >= list.size
+    index = list.size - 1 if index < 0
+    @spell[word] = list[index]
+    @on_update_spell&.call(word, @spell[word].to_s + (word == :obj ? 's' : ''))
   end
 
   def draw
