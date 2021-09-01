@@ -18,7 +18,8 @@ class Man
   attr_writer :on_leave,
               :on_start_spell,
               :on_update_spell,
-              :on_end_spell,
+              :on_cancel_spell,
+              :on_cast_spell,
               :on_mana_change
 
   def initialize
@@ -30,7 +31,7 @@ class Man
     @mass = 1
     @mana = 3
     @spell_objs = [:wall, :ledge, :water]
-    @spell_props = [:sticky, :bouncy, :semisolid]
+    @spell_props = [:sticky, :bouncy, :semisolid, :liquid]
 
     @anim_frame = 0
   end
@@ -49,10 +50,16 @@ class Man
     if @spell
       if KB.key_pressed?(Gosu::KB_X)
         @spell = nil
-        @on_end_spell.call
-      elsif KB.key_pressed?(Gosu::KB_Z) && @spell[:state] == :obj
-        @spell[:state] = :prop
-        @on_update_spell.call(:state, :prop)
+        @on_cancel_spell.call
+      elsif KB.key_pressed?(Gosu::KB_Z)
+        if @spell[:state] == :obj
+          @spell[:state] = :prop
+          @on_update_spell.call(:state, :prop)
+        else
+          @on_cast_spell.call(@spell[:obj], @spell[:prop])
+          @on_mana_change.call(@mana -= 1)
+          @spell = nil
+        end
       elsif KB.key_pressed?(Gosu::KB_DOWN)
         change_spell_word(-1)
       elsif KB.key_pressed?(Gosu::KB_UP)
@@ -107,7 +114,7 @@ class Man
       @on_leave.call(:right)
     end
 
-    if KB.key_pressed?(Gosu::KB_Z)
+    if KB.key_pressed?(Gosu::KB_Z) && @mana > 0
       @spell = { obj: @spell_objs[0], prop: @spell_props[0], state: :obj }
       @on_start_spell.call(@x, @y, @spell[:obj].to_s + 's', @spell[:prop].to_s)
     end

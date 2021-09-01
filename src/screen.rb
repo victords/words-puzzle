@@ -76,7 +76,7 @@ class Screen
   end
 
   def reset
-    # TODO
+    @objects.each(&:reset)
   end
 
   def get_obstacles
@@ -85,6 +85,10 @@ class Screen
 
   def inside_liquid?(obj)
     @objects.any? { |o| o != obj && o.liquid? && o.bounds.intersect?(obj.bounds) }
+  end
+
+  def apply(obj, prop)
+    @objects.select { |o| o.type == obj }.each { |o| o.add_prop(prop) }
   end
 
   def update

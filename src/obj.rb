@@ -4,13 +4,19 @@ require_relative 'constants'
 include MiniGL
 
 class Obj
-  attr_reader :x, :y, :w, :h
+  attr_reader :type, :x, :y, :w, :h
 
   DEFAULT_PROPS = {
     floor: [:solid],
     wall: [:solid],
     ledge: [:semisolid],
     water: [:liquid]
+  }.freeze
+
+  EXCLUSIVE_PROPS = {
+    solid: [:semisolid, :liquid],
+    semisolid: [:solid, :liquid],
+    liquid: [:solid, :semisolid]
   }.freeze
 
   WAVE_SIZE = 20
@@ -23,11 +29,13 @@ class Obj
     @h = h
 
     @props = Set.new(DEFAULT_PROPS[type]) + (props || [])
+    @original_props = @props.clone
 
     @timer = 0
   end
 
   def add_prop(prop)
+    EXCLUSIVE_PROPS[prop]&.each { |p| @props.delete(p) }
     @props << prop
   end
 
@@ -45,6 +53,10 @@ class Obj
 
   def respond_to_missing?(method_name, _ = false)
     method_name.to_s.end_with?('?')
+  end
+
+  def reset
+    @props = @original_props.clone
   end
 
   def update

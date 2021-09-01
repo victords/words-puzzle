@@ -18,7 +18,11 @@ class Window < GameWindow
     @man.on_leave = method(:handle_leave)
     @man.on_start_spell = @hud.method(:start_spell)
     @man.on_update_spell = @hud.method(:update_spell)
-    @man.on_end_spell = @hud.method(:end_spell)
+    @man.on_cancel_spell = @hud.method(:end_spell)
+    @man.on_cast_spell = lambda { |obj, prop|
+      @hud.end_spell
+      @screen.apply(obj, prop)
+    }
     @man.on_mana_change = @hud.method(:update_mana)
 
     @screen_cache = {}
