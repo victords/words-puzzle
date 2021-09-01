@@ -49,9 +49,10 @@ class Man
     if @spell
       if KB.key_pressed?(Gosu::KB_X)
         @spell = nil
-        @on_end_spell&.call
+        @on_end_spell.call
       elsif KB.key_pressed?(Gosu::KB_Z) && @spell[:state] == :obj
         @spell[:state] = :prop
+        @on_update_spell.call(:state, :prop)
       elsif KB.key_pressed?(Gosu::KB_DOWN)
         change_spell_word(-1)
       elsif KB.key_pressed?(Gosu::KB_UP)
@@ -101,9 +102,9 @@ class Man
     end
 
     if @x < -@w / 2
-      @on_leave&.call(:left)
+      @on_leave.call(:left)
     elsif @x + @w > G.window.width + @w / 2
-      @on_leave&.call(:right)
+      @on_leave.call(:right)
     end
 
     if KB.key_pressed?(Gosu::KB_Z)
@@ -139,7 +140,7 @@ class Man
     index = 0 if index >= list.size
     index = list.size - 1 if index < 0
     @spell[word] = list[index]
-    @on_update_spell&.call(word, @spell[word].to_s + (word == :obj ? 's' : ''))
+    @on_update_spell.call(word, @spell[word].to_s + (word == :obj ? 's' : ''))
   end
 
   def draw

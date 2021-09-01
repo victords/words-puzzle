@@ -45,6 +45,7 @@ class Window < GameWindow
     KB.update
     @screen.update
     @man.update(@screen)
+    @hud.update
 
     toggle_fullscreen if KB.key_pressed?(Gosu::KB_F4)
     close if KB.key_pressed?(Gosu::KB_ESCAPE)
@@ -73,6 +74,13 @@ class Window < GameWindow
 
   def draw_rect(x, y, w, h, color, color2 = nil, z_index = 0)
     draw_quad(x, y, color, x + w, y, color, x, y + h, color2 || color, x + w, y + h, color2 || color, z_index)
+  end
+
+  def draw_outline_rect(x, y, w, h, color, thickness = 1, z_index = 0)
+    draw_rect(x, y, w, thickness, color, nil, z_index)
+    draw_rect(x, y + h - thickness, w, thickness, color, nil, z_index)
+    draw_rect(x, y, thickness, h, color, nil, z_index)
+    draw_rect(x + w - thickness, y, thickness, h, color, nil, z_index)
   end
 
   def draw

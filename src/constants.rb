@@ -7,7 +7,8 @@ module Color
   WATER = 0x8066ccff
   DARK_BLUE = 0xff000099
   BEIGE = 0xffffee80
-  GRAY = 0xff666666
+  GRAY = 0xff999999
+  GOLD = 0xffffdd00
   BLACK_TRANSP = 0
 end
 
