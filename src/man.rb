@@ -1,6 +1,7 @@
 include MiniGL
 
 require_relative 'constants'
+require_relative 'particles'
 
 class Man
   MOVE_FORCE = 0.5
@@ -35,6 +36,7 @@ class Man
     @spell_props = [:sticky, :bouncy, :semisolid, :liquid]
 
     @anim_frame = 0
+    @particles = Particles.new(:glow, 0, 0, Color::WHITE, 5, 1, 5, 2)
   end
 
   def set_position(x, y = nil)
@@ -53,6 +55,7 @@ class Man
       if KB.key_pressed?(Gosu::KB_X)
         @spell = nil
         @on_cancel_spell.call
+        @particles.stop
       elsif KB.key_pressed?(Gosu::KB_Z)
         if @spell[:state] == :obj
           @spell[:state] = :prop
@@ -61,6 +64,7 @@ class Man
           @on_cast_spell.call(@spell[:obj], @spell[:prop])
           @on_mana_change.call(@mana -= 1)
           @spell = nil
+          @particles.stop
         end
       elsif KB.key_pressed?(Gosu::KB_DOWN)
         change_spell_word(-1)
@@ -72,6 +76,7 @@ class Man
       if KB.key_pressed?(Gosu::KB_Z) && @mana > 0
         @spell = { obj: @spell_objs[0], prop: @spell_props[0], state: :obj }
         @on_start_spell.call(@x, @y, @spell[:obj].to_s + 's', @spell[:prop].to_s)
+        @particles.start
       elsif KB.key_down?(Gosu::KB_RIGHT)
         speed.x += MOVE_FORCE
       elsif KB.key_down?(Gosu::KB_LEFT)
@@ -130,6 +135,8 @@ class Man
       @eye_offset = 5
       @hand_offset = [Vector.new(@vest_offset, @head_offset / 2 + 35), Vector.new(rate * 5, rate * 5 + 25)]
       @wand_offset = [Vector.new(@hand_offset[1].x + 4, @hand_offset[1].y + 8), Vector.new(rate * 40 + 30, rate * 30 + 5)]
+
+      @particles.move(@x + @w + @wand_offset[1].x, @y + @wand_offset[1].y)
     elsif walking
       @head_offset = rate * 4
       @vest_offset = rate * 5
@@ -146,6 +153,8 @@ class Man
 
     @anim_frame += 1
     @anim_frame = 0 if @anim_frame == cycle_time
+
+    @particles&.update
   end
 
   def change_spell_word(delta)
@@ -203,5 +212,7 @@ class Man
                        p2.x, p2.y, Color::BLACK,
                        p3.x, p3.y, Color::BLACK,
                        p4.x, p4.y, Color::BLACK, 0)
+
+    @particles&.draw
   end
 end
