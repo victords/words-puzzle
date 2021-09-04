@@ -50,10 +50,12 @@ class Particles
 
   def draw
     @elements.each do |e|
+      alpha = ((e.lifetime <= @duration * 0.5 ? e.lifetime : (@duration - e.lifetime)) / (@duration * 0.5) * 255).round
+      color = (alpha << 24) | (@color & 0xffffff)
       case @type
       when :glow
-        G.window.draw_line(e.x, e.y - @scale, @color, e.x, e.y + @scale + 1, @color, @z_index)
-        G.window.draw_line(e.x - @scale, e.y, @color, e.x + @scale + 1, e.y, @color, @z_index)
+        G.window.draw_line(e.x, e.y - @scale, color, e.x, e.y + @scale + 1, color, @z_index)
+        G.window.draw_line(e.x - @scale, e.y, color, e.x + @scale + 1, e.y, color, @z_index)
       end
     end
   end

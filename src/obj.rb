@@ -5,6 +5,7 @@ include MiniGL
 
 class Obj
   attr_reader :type, :x, :y, :w, :h
+  attr_accessor :highlight
 
   DEFAULT_PROPS = {
     floor: [:solid],
@@ -20,6 +21,7 @@ class Obj
   }.freeze
 
   WAVE_SIZE = 20
+  HIGHLIGHT_CYCLE = 120
 
   def initialize(type, x, y, w, h, props)
     @type = type
@@ -31,7 +33,7 @@ class Obj
     @props = Set.new(DEFAULT_PROPS[type]) + (props || [])
     @original_props = @props.clone
 
-    @timer = 0
+    @timer = @highlight_timer = 0
   end
 
   def add_prop(prop)
@@ -64,6 +66,11 @@ class Obj
       @timer += 1
       @timer = 0 if @timer == WAVE_SIZE * 2
     end
+
+    return unless @highlight
+
+    @highlight_timer += 1
+    @highlight_timer = 0 if @highlight_timer == HIGHLIGHT_CYCLE
   end
 
   def draw
@@ -74,7 +81,7 @@ class Obj
     when :ledge
       G.window.draw_rect(@x, @y, @w, @h, Color::BLACK, Color::BLACK_TRANSP)
     when :water
-      G.window.draw_rect(@x, @y, @w, @h, Color::WATER, nil, 1)
+      G.window.draw_rect(@x, @y, @w, @h, Color::WATER, nil, false, 1)
       wave_count = (@w.to_f / WAVE_SIZE).ceil
       (-2...wave_count).each do |i|
         x = @x + i * WAVE_SIZE + @timer
@@ -113,5 +120,14 @@ class Obj
         end
       end
     end
+
+    return unless @highlight
+
+    alpha = 51 + ((@highlight_timer <= HIGHLIGHT_CYCLE / 2 ? @highlight_timer : (HIGHLIGHT_CYCLE - @highlight_timer)).to_f / (HIGHLIGHT_CYCLE / 2) * 102).round
+    color = (alpha << 24) | (Color::MAGENTA & 0xffffff)
+    G.window.draw_rect(@x, @y, @w, @h * 0.5, color, Color::MAGENTA_TRANSP, false, 1)
+    G.window.draw_rect(@x, @y + @h * 0.5, @w, @h * 0.5, Color::MAGENTA_TRANSP, color, false, 1)
+    G.window.draw_rect(@x, @y, @w * 0.5, @h, color, Color::MAGENTA_TRANSP, true, 1)
+    G.window.draw_rect(@x + @w * 0.5, @y, @w * 0.5, @h, Color::MAGENTA_TRANSP, color, true, 1)
   end
 end

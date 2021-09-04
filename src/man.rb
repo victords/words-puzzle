@@ -75,7 +75,7 @@ class Man
     else
       if KB.key_pressed?(Gosu::KB_Z) && @mana > 0
         @spell = { obj: @spell_objs[0], prop: @spell_props[0], state: :obj }
-        @on_start_spell.call(@x, @y, @spell[:obj].to_s + 's', @spell[:prop].to_s)
+        @on_start_spell.call(@x, @y, @spell[:obj], @spell[:prop])
         @particles.start
       elsif KB.key_down?(Gosu::KB_RIGHT)
         speed.x += MOVE_FORCE
@@ -165,7 +165,7 @@ class Man
     index = 0 if index >= list.size
     index = list.size - 1 if index < 0
     @spell[word] = list[index]
-    @on_update_spell.call(word, @spell[word].to_s + (word == :obj ? 's' : ''))
+    @on_update_spell.call(word, @spell[word])
   end
 
   def default_hand_offsets

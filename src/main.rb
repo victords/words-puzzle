@@ -16,9 +16,18 @@ class Window < GameWindow
 
     @man = Man.new
     @man.on_leave = method(:handle_leave)
-    @man.on_start_spell = @hud.method(:start_spell)
-    @man.on_update_spell = @hud.method(:update_spell)
-    @man.on_cancel_spell = @hud.method(:end_spell)
+    @man.on_start_spell = lambda { |x, y, obj, prop|
+      @hud.start_spell(x, y, obj.to_s, prop.to_s)
+      @screen.highlight(obj)
+    }
+    @man.on_update_spell = lambda { |key, value|
+      @hud.update_spell(key, value)
+      @screen.highlight(value) if key == :obj
+    }
+    @man.on_cancel_spell = lambda {
+      @hud.end_spell
+      @screen.highlight(nil)
+    }
     @man.on_cast_spell = lambda { |obj, prop|
       @hud.end_spell
       @screen.apply(obj, prop)
@@ -76,15 +85,19 @@ class Window < GameWindow
     end
   end
 
-  def draw_rect(x, y, w, h, color, color2 = nil, z_index = 0)
-    draw_quad(x, y, color, x + w, y, color, x, y + h, color2 || color, x + w, y + h, color2 || color, z_index)
+  def draw_rect(x, y, w, h, color, color2 = nil, horiz = false, z_index = 0)
+    draw_quad(x, y, color,
+              x + w, y, horiz ? (color2 || color) : color,
+              x, y + h, horiz ? color : (color2 || color),
+              x + w, y + h, color2 || color,
+              z_index)
   end
 
   def draw_outline_rect(x, y, w, h, color, thickness = 1, z_index = 0)
-    draw_rect(x, y, w, thickness, color, nil, z_index)
-    draw_rect(x, y + h - thickness, w, thickness, color, nil, z_index)
-    draw_rect(x, y, thickness, h, color, nil, z_index)
-    draw_rect(x + w - thickness, y, thickness, h, color, nil, z_index)
+    draw_rect(x, y, w, thickness, color, nil, nil, z_index)
+    draw_rect(x, y + h - thickness, w, thickness, color, nil, nil, z_index)
+    draw_rect(x, y, thickness, h, color, nil, nil, z_index)
+    draw_rect(x + w - thickness, y, thickness, h, color, nil, nil, z_index)
   end
 
   def draw

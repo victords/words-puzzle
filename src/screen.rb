@@ -87,8 +87,12 @@ class Screen
     @objects.any? { |o| o != obj && o.liquid? && o.bounds.intersect?(obj.bounds) }
   end
 
-  def apply(obj, prop)
-    @objects.select { |o| o.type == obj }.each { |o| o.add_prop(prop) }
+  def highlight(obj_type)
+    @objects.each { |o| o.highlight = o.type == obj_type }
+  end
+
+  def apply(obj_type, prop)
+    @objects.select { |o| o.type == obj_type }.each { |o| o.add_prop(prop) }
   end
 
   def update

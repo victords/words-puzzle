@@ -10,6 +10,8 @@ module Color
   GRAY = 0xff999999
   GOLD = 0xffffdd00
   BLACK_TRANSP = 0
+  MAGENTA = 0xffff00ff
+  MAGENTA_TRANSP = 0xff00ff
 end
 
 module Physics

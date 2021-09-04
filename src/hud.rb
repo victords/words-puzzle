@@ -31,7 +31,7 @@ class Hud
   end
 
   def update_spell(key, value)
-    @spell[key] = value
+    @spell[key] = key == :state ? value : value.to_s
   end
 
   def end_spell
@@ -62,8 +62,8 @@ class Hud
       G.window.draw_triangle(@balloon_arrow[0], @balloon_arrow[1], Color::WHITE,
                              @balloon_arrow[2], @balloon_arrow[3], Color::WHITE,
                              @balloon_arrow[4], @balloon_arrow[5], Color::WHITE, 102)
-      G.window.draw_rect(@balloon[0] - 5, @balloon[1] - 5, @balloon[2] + 10, @balloon[3] + 10, Color::BLACK, nil, 101)
-      G.window.draw_rect(@balloon[0], @balloon[1], @balloon[2], @balloon[3], Color::WHITE, nil, 102)
+      G.window.draw_rect(@balloon[0] - 5, @balloon[1] - 5, @balloon[2] + 10, @balloon[3] + 10, Color::BLACK, nil, nil, 101)
+      G.window.draw_rect(@balloon[0], @balloon[1], @balloon[2], @balloon[3], Color::WHITE, nil, nil, 102)
 
       b_w = Game::SCREEN_WIDTH - 400
       Text.draw('make', @balloon[0] + b_w * 0.1, @balloon[1] + 30, 60, true, Color::BLACK, 4, 102)
