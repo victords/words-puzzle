@@ -36,7 +36,7 @@ class Man
     @spell_props = [:sticky, :bouncy, :semisolid, :liquid]
 
     @anim_frame = 0
-    @particles = Particles.new(:glow, 0, 0, Color::WHITE, 5, 1, 5, 2)
+    @particles = Particles.new(:glow, 0, 0, Color::WHITE, 5, 1, 5, nil, 2)
   end
 
   def set_position(x, y = nil)
@@ -154,7 +154,7 @@ class Man
     @anim_frame += 1
     @anim_frame = 0 if @anim_frame == cycle_time
 
-    @particles&.update
+    @particles.update
   end
 
   def change_spell_word(delta)
@@ -213,6 +213,6 @@ class Man
                        p3.x, p3.y, Color::BLACK,
                        p4.x, p4.y, Color::BLACK, 0)
 
-    @particles&.draw
+    @particles.draw
   end
 end

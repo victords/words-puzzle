@@ -5,7 +5,7 @@ class Particles
 
   FRAME_DURATION = 1.0 / 60
 
-  def initialize(type, x, y, color, emission_rate, duration, spread_rate = 10, scale = 1, z_index = 0)
+  def initialize(type, x, y, color, emission_rate, duration, spread_rate = 10, area = nil, scale = 1, z_index = 0)
     @type = type
     @x = x
     @y = y
@@ -13,11 +13,13 @@ class Particles
     @emission_interval = 1.0 / emission_rate
     @duration = duration
     @spread_rate = spread_rate
+    @area = area
     @scale = scale
     @z_index = z_index
 
     @elements = []
     @timer = 0
+    @stopped = true
   end
 
   def update
@@ -30,7 +32,9 @@ class Particles
 
     @timer += FRAME_DURATION
     if @timer >= @emission_interval
-      @elements << Particle.new(@x + @spread_rate * (rand - 0.5), @y + @spread_rate * (rand - 0.5), @duration)
+      x = @area ? @x + rand * @area.x : @x + @spread_rate * (rand - 0.5)
+      y = @area ? @y + rand * @area.y : @y + @spread_rate * (rand - 0.5)
+      @elements << Particle.new(x, y, @duration)
       @timer -= @emission_interval
     end
   end
@@ -56,6 +60,23 @@ class Particles
       when :glow
         G.window.draw_line(e.x, e.y - @scale, color, e.x, e.y + @scale + 1, color, @z_index)
         G.window.draw_line(e.x - @scale, e.y, color, e.x + @scale + 1, e.y, color, @z_index)
+      when :star
+        i_r = 5 * @scale
+        o_r = 10 * @scale
+        sides = 10
+        last_a = last_x = last_y = nil
+        (0...sides).each do |i|
+          a1 = last_a || i / sides.to_f * 2 * Math::PI
+          a2 = (i + 1) / sides.to_f * 2 * Math::PI
+          x1 = last_x || e.x + (i.even? ? o_r : i_r) * Math.cos(a1)
+          y1 = last_y || e.y + (i.even? ? o_r : i_r) * Math.sin(a1)
+          x2 = e.x + (i.even? ? i_r : o_r) * Math.cos(a2)
+          y2 = e.y + (i.even? ? i_r : o_r) * Math.sin(a2)
+          G.window.draw_triangle(e.x, e.y, color, x1, y1, color, x2, y2, color, @z_index)
+          last_a = a2
+          last_x = x2
+          last_y = y2
+        end
       end
     end
   end

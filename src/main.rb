@@ -31,6 +31,7 @@ class Window < GameWindow
     @man.on_cast_spell = lambda { |obj, prop|
       @hud.end_spell
       @screen.apply(obj, prop)
+      @screen.highlight(nil)
     }
     @man.on_mana_change = @hud.method(:update_mana)
 
@@ -96,8 +97,8 @@ class Window < GameWindow
   def draw_outline_rect(x, y, w, h, color, thickness = 1, z_index = 0)
     draw_rect(x, y, w, thickness, color, nil, nil, z_index)
     draw_rect(x, y + h - thickness, w, thickness, color, nil, nil, z_index)
-    draw_rect(x, y, thickness, h, color, nil, nil, z_index)
-    draw_rect(x + w - thickness, y, thickness, h, color, nil, nil, z_index)
+    draw_rect(x, y + thickness, thickness, h - 2 * thickness, color, nil, nil, z_index)
+    draw_rect(x + w - thickness, y + thickness, thickness, h - 2 * thickness, color, nil, nil, z_index)
   end
 
   def draw

@@ -1,11 +1,11 @@
 require 'set'
 require_relative 'constants'
+require_relative 'particles'
 
 include MiniGL
 
 class Obj
   attr_reader :type, :x, :y, :w, :h
-  attr_accessor :highlight
 
   DEFAULT_PROPS = {
     floor: [:solid],
@@ -34,6 +34,7 @@ class Obj
     @original_props = @props.clone
 
     @timer = @highlight_timer = 0
+    @particles = Particles.new(:star, @x, @y, Color::MAGENTA, 10, 1, nil, Vector.new(@w, @h), 1, 1)
   end
 
   def add_prop(prop)
@@ -61,11 +62,21 @@ class Obj
     @props = @original_props.clone
   end
 
+  def highlight=(value)
+    @highlight = value
+    if @highlight
+      @particles.start
+    else
+      @particles.stop
+    end
+  end
+
   def update
     if @type == :water
       @timer += 1
       @timer = 0 if @timer == WAVE_SIZE * 2
     end
+    @particles.update
 
     return unless @highlight
 
@@ -121,13 +132,15 @@ class Obj
       end
     end
 
+    @particles.draw
     return unless @highlight
 
     alpha = 51 + ((@highlight_timer <= HIGHLIGHT_CYCLE / 2 ? @highlight_timer : (HIGHLIGHT_CYCLE - @highlight_timer)).to_f / (HIGHLIGHT_CYCLE / 2) * 102).round
-    color = (alpha << 24) | (Color::MAGENTA & 0xffffff)
-    G.window.draw_rect(@x, @y, @w, @h * 0.5, color, Color::MAGENTA_TRANSP, false, 1)
-    G.window.draw_rect(@x, @y + @h * 0.5, @w, @h * 0.5, Color::MAGENTA_TRANSP, color, false, 1)
-    G.window.draw_rect(@x, @y, @w * 0.5, @h, color, Color::MAGENTA_TRANSP, true, 1)
-    G.window.draw_rect(@x + @w * 0.5, @y, @w * 0.5, @h, Color::MAGENTA_TRANSP, color, true, 1)
+    color1 = (alpha << 24) | (Color::MAGENTA & 0xffffff)
+    color2 = ((alpha * 0.66667).round << 24) | (Color::MAGENTA & 0xffffff)
+    color3 = ((alpha * 0.33333).round << 24) | (Color::MAGENTA & 0xffffff)
+    G.window.draw_outline_rect(@x, @y, @w, @h, color1, 2, 1)
+    G.window.draw_outline_rect(@x + 2, @y + 2, @w - 4, @h - 4, color2, 2, 1)
+    G.window.draw_outline_rect(@x + 4, @y + 4, @w - 8, @h - 8, color3, 2, 1)
   end
 end
