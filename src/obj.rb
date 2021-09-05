@@ -1,6 +1,7 @@
 require 'set'
 require_relative 'constants'
 require_relative 'particles'
+require_relative 'utils'
 
 include MiniGL
 
@@ -135,7 +136,7 @@ class Obj
     @particles.draw
     return unless @highlight
 
-    alpha = 51 + ((@highlight_timer <= HIGHLIGHT_CYCLE / 2 ? @highlight_timer : (HIGHLIGHT_CYCLE - @highlight_timer)).to_f / (HIGHLIGHT_CYCLE / 2) * 102).round
+    alpha = 51 + (Utils.alternating_rate(@highlight_timer, HIGHLIGHT_CYCLE) * 102).round
     color1 = (alpha << 24) | (Color::MAGENTA & 0xffffff)
     color2 = ((alpha * 0.66667).round << 24) | (Color::MAGENTA & 0xffffff)
     color3 = ((alpha * 0.33333).round << 24) | (Color::MAGENTA & 0xffffff)

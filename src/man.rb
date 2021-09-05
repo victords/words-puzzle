@@ -2,6 +2,7 @@ include MiniGL
 
 require_relative 'constants'
 require_relative 'particles'
+require_relative 'utils'
 
 class Man
   MOVE_FORCE = 0.5
@@ -31,7 +32,8 @@ class Man
     @stored_forces = Vector.new
     @max_speed = Vector.new(MAX_H_SPEED, MAX_V_SPEED)
     @mass = 1
-    @mana = 3
+
+    @mana = 0
     @spell_objs = [:wall, :ledge, :water]
     @spell_props = [:sticky, :bouncy, :semisolid, :liquid]
 
@@ -127,25 +129,25 @@ class Man
     walking = @speed.x.abs > G.min_speed.x
     cycle_time = @spell ? ANIM_SPELL_CYCLE : walking ? ANIM_WALK_CYCLE : ANIM_IDLE_CYCLE
     @anim_frame = 0 if @anim_frame > cycle_time
-    rate = (@anim_frame >= cycle_time / 2 ? cycle_time - @anim_frame : @anim_frame).to_f / cycle_time
+    rate = Utils.alternating_rate(@anim_frame, cycle_time)
 
     if @spell
-      @head_offset = rate * 3
-      @vest_offset = rate * 2
+      @head_offset = rate * 1.5
+      @vest_offset = rate
       @eye_offset = 5
-      @hand_offset = [Vector.new(@vest_offset, @head_offset / 2 + 35), Vector.new(rate * 5, rate * 5 + 25)]
-      @wand_offset = [Vector.new(@hand_offset[1].x + 4, @hand_offset[1].y + 8), Vector.new(rate * 40 + 30, rate * 30 + 5)]
+      @hand_offset = [Vector.new(@vest_offset, @head_offset / 2 + 35), Vector.new(rate * 2.5, rate * 2.5 + 25)]
+      @wand_offset = [Vector.new(@hand_offset[1].x + 4, @hand_offset[1].y + 8), Vector.new(rate * 20 + 30, rate * 15 + 5)]
 
       @particles.move(@x + @w + @wand_offset[1].x, @y + @wand_offset[1].y)
     elsif walking
-      @head_offset = rate * 4
-      @vest_offset = rate * 5
+      @head_offset = rate * 2
+      @vest_offset = rate * 2.5
       @eye_offset = @speed.x < 0 ? 8 : 2
       @hand_offset = default_hand_offsets
       @wand_offset = default_wand_offsets
     else
-      @head_offset = rate * 4
-      @vest_offset = rate * 3
+      @head_offset = rate * 2
+      @vest_offset = rate * 1.5
       @eye_offset = 5
       @hand_offset = default_hand_offsets
       @wand_offset = default_wand_offsets
@@ -166,6 +168,11 @@ class Man
     index = list.size - 1 if index < 0
     @spell[word] = list[index]
     @on_update_spell.call(word, @spell[word])
+  end
+
+  def add_mana(amount)
+    @mana += amount
+    @on_mana_change.call(@mana)
   end
 
   def default_hand_offsets

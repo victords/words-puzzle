@@ -1,3 +1,5 @@
+require_relative 'utils'
+
 include MiniGL
 
 class Particles
@@ -54,7 +56,7 @@ class Particles
 
   def draw
     @elements.each do |e|
-      alpha = ((e.lifetime <= @duration * 0.5 ? e.lifetime : (@duration - e.lifetime)) / (@duration * 0.5) * 255).round
+      alpha = (Utils.alternating_rate(e.lifetime, @duration) * 255).round
       color = (alpha << 24) | (@color & 0xffffff)
       case @type
       when :glow

@@ -12,8 +12,7 @@ class Window < GameWindow
 
     Res.prefix = File.expand_path(__FILE__).split('/')[0..-3].join('/') + '/data'
 
-    @hud = Hud.new(Game::INITIAL_MAX_MANA)
-
+    @hud = Hud.new
     @man = Man.new
     @man.on_leave = method(:handle_leave)
     @man.on_start_spell = lambda { |x, y, obj, prop|
@@ -57,7 +56,7 @@ class Window < GameWindow
 
   def update
     KB.update
-    @screen.update
+    @screen.update(@man)
     @man.update(@screen)
     @hud.update
 

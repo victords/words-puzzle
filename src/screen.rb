@@ -1,4 +1,5 @@
 require_relative 'obj'
+require_relative 'mana'
 
 include MiniGL
 
@@ -7,6 +8,7 @@ class Screen
 
   def initialize(num)
     @objects = []
+    @manas = []
     @entrances = {}
     @exits = {}
     File.open("#{Res.prefix}screen/#{num}") do |f|
@@ -18,6 +20,8 @@ class Screen
           @entrances[data[2]&.to_sym || :default] = Vector.new(pos[0], pos[1])
         when 'exit'
           @exits[data[1].to_sym] = data[2].to_i
+        when 'mana'
+          @manas << Mana.new(*data[1].split(',').map(&:to_i))
         else
           bounds = data[1].split(',').map(&:to_i)
           @objects << Obj.new(data[0].to_sym, bounds[0], bounds[1], bounds[2], bounds[3],
@@ -95,12 +99,17 @@ class Screen
     @objects.select { |o| o.type == obj_type }.each { |o| o.add_prop(prop) }
   end
 
-  def update
+  def update(man)
     @objects.each(&:update)
+    @manas.reverse_each do |m|
+      m.update(man)
+      @manas.delete(m) if m.dead
+    end
   end
 
   def draw
     @bg_procs.each(&:call)
     @objects.each(&:draw)
+    @manas.each(&:draw)
   end
 end

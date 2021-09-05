@@ -1,9 +1,13 @@
+require_relative 'constants'
+require_relative 'utils'
+
 class Hud
   BALLOON_V_LIMIT = 200
   CYCLE_TIME = 60
 
-  def initialize(max_mana)
-    @mana = @max_mana = max_mana
+  def initialize
+    @max_mana = Game::INITIAL_MAX_MANA
+    @mana = 0
     @timer = 0
   end
 
@@ -72,7 +76,7 @@ class Hud
 
       outline_x = @balloon[0] + b_w * (@spell[:state] == :obj ? 0.4 : 0.8) - 150
       G.window.draw_outline_rect(outline_x, @balloon[1] + 15, 300, 90, Color::GRAY, 1, 102)
-      delta_y = (@timer >= CYCLE_TIME / 2 ? CYCLE_TIME - @timer : @timer).to_f / CYCLE_TIME * 5
+      delta_y = Utils.alternating_rate(@timer, CYCLE_TIME) * 5
       G.window.draw_triangle(outline_x + 135, @balloon[1] + 25 - delta_y, Color::GOLD,
                              outline_x + 165, @balloon[1] + 25 - delta_y, Color::GOLD,
                              outline_x + 150, @balloon[1] + 5 - delta_y, Color::GOLD, 102)
