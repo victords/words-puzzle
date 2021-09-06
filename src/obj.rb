@@ -35,7 +35,7 @@ class Obj
     @original_props = @props.clone
 
     @timer = @highlight_timer = 0
-    @particles = Particles.new(:star, @x, @y, Color::MAGENTA, 10, 1, nil, Vector.new(@w, @h), 1, 1)
+    @particles = Particles.new(:star, @x, @y, Color::MAGENTA, @w * @h / 200.0, 1, nil, Vector.new(@w, @h), 1, 1)
   end
 
   def add_prop(prop)

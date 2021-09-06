@@ -7,6 +7,8 @@ class Particles
 
   FRAME_DURATION = 1.0 / 60
 
+  attr_reader :playing, :x, :y
+
   def initialize(type, x, y, color, emission_rate, duration, spread_rate = 10, area = nil, scale = 1, z_index = 0)
     @type = type
     @x = x
@@ -21,7 +23,7 @@ class Particles
 
     @elements = []
     @timer = 0
-    @stopped = true
+    @playing = false
   end
 
   def update
@@ -30,7 +32,7 @@ class Particles
       @elements.delete(e) if e.lifetime <= 0
     end
 
-    return if @stopped
+    return unless @playing
 
     @timer += FRAME_DURATION
     if @timer >= @emission_interval
@@ -46,11 +48,11 @@ class Particles
   end
 
   def start
-    @stopped = false
+    @playing = true
   end
 
   def stop
-    @stopped = true
+    @playing = false
     @timer = 0
   end
 

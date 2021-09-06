@@ -28,7 +28,7 @@ class Mana
 
   def draw
     rate = Utils.alternating_rate(@timer, ANIM_CYCLE)
-    c1 = Utils.lighten(Color::LIME, 0.2 + rate * 0.6)
+    c1 = Utils.lighten(Color::LIME, 0.5 + rate * 0.4)
     c2 = Utils.lighten(Color::LIME, rate * 0.5)
     c3 = Utils.darken(Color::LIME, 0.1 - rate * 0.07)
     G.window.draw_triangle(@x, @y, c1, @x - @w / 2, @y, c1, @x, @y - @h / 2, c1, 0)

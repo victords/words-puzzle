@@ -20,6 +20,10 @@ class Utils
       compose(a, r, g, b)
     end
 
+    def with_alpha(color, alpha)
+      (alpha << 24) | (color & 0xffffff)
+    end
+
     private
 
     def components(color)
