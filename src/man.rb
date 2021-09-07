@@ -35,7 +35,7 @@ class Man
 
     @mana = 0
     @max_mana = Game::INITIAL_MAX_MANA
-    @spell_objs = [:wall, :ledge, :water]
+    @spell_objs = []
     @spell_props = [:sticky, :bouncy, :semisolid, :liquid]
 
     @anim_frame = 0
@@ -77,7 +77,7 @@ class Man
       end
       speed.x = -BRAKE_RATE * @speed.x
     else
-      if KB.key_pressed?(Gosu::KB_Z) && @mana > 0
+      if KB.key_pressed?(Gosu::KB_Z) && @mana > 0 && @spell_objs.any? && @spell_props.any?
         @spell = { obj: @spell_objs[0], prop: @spell_props[0], state: :obj }
         @on_start_spell.call(@x, @y, @spell[:obj], @spell[:prop])
         @spell_particles.start
@@ -189,6 +189,10 @@ class Man
     @on_mana_change.call(@mana)
     @mana_particles.move(@x + @w / 2, @y + @h / 2)
     @mana_particles.start
+  end
+
+  def add_word(word, type)
+    (type == :obj ? @spell_objs : @spell_props) << word
   end
 
   def default_hand_offsets

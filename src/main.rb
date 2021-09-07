@@ -12,6 +12,7 @@ class Window < GameWindow
     super(Game::SCREEN_WIDTH, Game::SCREEN_HEIGHT)
 
     Res.prefix = File.expand_path(__FILE__).split('/')[0..-3].join('/') + '/data'
+    Text.init
 
     @hud = Hud.new
     @man = Man.new
@@ -37,9 +38,6 @@ class Window < GameWindow
 
     @screen_cache = {}
     load_screen(1)
-
-    Text.init
-    @word = Word.new(:wall, 600, 360)
   end
 
   def load_screen(num, entrance = nil)
@@ -61,7 +59,6 @@ class Window < GameWindow
     @screen.update(@man)
     @man.update(@screen)
     @hud.update
-    @word.update
     toggle_fullscreen if KB.key_pressed?(Gosu::KB_F4)
     close if KB.key_pressed?(Gosu::KB_ESCAPE)
   end
@@ -105,7 +102,6 @@ class Window < GameWindow
   def draw
     clear @screen.bg_color
     @screen.draw
-    @word.draw
     @man.draw
     @hud.draw
   end

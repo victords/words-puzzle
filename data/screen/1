@@ -6,6 +6,7 @@ exit:right:3
 mana:200,450
 mana:300,450
 mana:400,450
+word:wall:600,360
 floor:0,528,700,240
 floor:700,728,700,40
 wall:300,200,200,30

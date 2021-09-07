@@ -9,6 +9,7 @@ class Screen
   def initialize(num)
     @objects = []
     @manas = []
+    @words = []
     @entrances = {}
     @exits = {}
     File.open("#{Res.prefix}screen/#{num}") do |f|
@@ -22,6 +23,9 @@ class Screen
           @exits[data[1].to_sym] = data[2].to_i
         when 'mana'
           @manas << Mana.new(*data[1].split(',').map(&:to_i))
+        when 'word'
+          pos = data[2].split(',').map(&:to_i)
+          @words << Word.new(data[1].to_sym, pos[0], pos[1])
         else
           bounds = data[1].split(',').map(&:to_i)
           @objects << Obj.new(data[0].to_sym, bounds[0], bounds[1], bounds[2], bounds[3],
@@ -105,11 +109,16 @@ class Screen
       m.update(man)
       @manas.delete(m) if m.dead
     end
+    @words.reverse_each do |w|
+      w.update(man)
+      @words.delete(w) if w.dead
+    end
   end
 
   def draw
     @bg_procs.each(&:call)
     @objects.each(&:draw)
     @manas.each(&:draw)
+    @words.each(&:draw)
   end
 end

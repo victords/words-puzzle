@@ -11,25 +11,36 @@ class Word
   GLOW_RADIUS = 100
   GLOW_COLOR = Utils.with_alpha(Color::GOLD, 180)
 
+  OBJS = %i[wall ledge water].freeze
+
+  attr_reader :dead
+
   def initialize(word, x, y)
     @word = word
+    @type = OBJS.include?(word) ? :obj : :prop
     @w = Text.measure(word.to_s, FONT_SIZE) + 20
     @h = FONT_SIZE + 6
     @x = x - @w / 2
     @y = y - @h / 2
     @c_x = x
     @c_y = y
+    @bounds = Rectangle.new(@x, @y, @w, @h)
 
     @timer = 0
     @glow_angle = 0
   end
 
-  def update
+  def update(man)
     @timer += 1
     @timer = 0 if @timer == CYCLE_TIME
 
     @glow_angle += ANGULAR_SPEED
     @glow_angle -= FULL_CIRCLE if @glow_angle >= FULL_CIRCLE
+
+    return unless man.bounds.intersect?(@bounds)
+
+    man.add_word(@word, @type)
+    @dead = true
   end
 
   def draw
