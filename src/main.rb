@@ -3,6 +3,7 @@ require_relative 'screen'
 require_relative 'man'
 require_relative 'hud'
 require_relative 'text'
+require_relative 'word'
 
 include MiniGL
 
@@ -38,6 +39,7 @@ class Window < GameWindow
     load_screen(1)
 
     Text.init
+    @word = Word.new(:wall, 600, 360)
   end
 
   def load_screen(num, entrance = nil)
@@ -59,7 +61,7 @@ class Window < GameWindow
     @screen.update(@man)
     @man.update(@screen)
     @hud.update
-
+    @word.update
     toggle_fullscreen if KB.key_pressed?(Gosu::KB_F4)
     close if KB.key_pressed?(Gosu::KB_ESCAPE)
   end
@@ -103,6 +105,7 @@ class Window < GameWindow
   def draw
     clear @screen.bg_color
     @screen.draw
+    @word.draw
     @man.draw
     @hud.draw
   end

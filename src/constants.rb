@@ -1,5 +1,6 @@
 module Color
   BLACK = 0xff000000
+  BLACK_TRANSP = 0
   WHITE = 0xffffffff
   BROWN = 0xff996600
   LIME = 0xff00ff00
@@ -9,7 +10,7 @@ module Color
   BEIGE = 0xffffee80
   GRAY = 0xff999999
   GOLD = 0xffffdd00
-  BLACK_TRANSP = 0
+  GOLD_TRANSP = 0xffdd00
   MAGENTA = 0xffff00ff
   MAGENTA_TRANSP = 0xff00ff
 end
