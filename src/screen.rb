@@ -1,4 +1,7 @@
-require_relative 'obj'
+require_relative 'objs/floor'
+require_relative 'objs/ledge'
+require_relative 'objs/wall'
+require_relative 'objs/water'
 require_relative 'mana'
 
 include MiniGL
@@ -8,8 +11,7 @@ class Screen
 
   def initialize(num)
     @objects = []
-    @manas = []
-    @words = []
+    @pickups = []
     @entrances = {}
     @exits = {}
     File.open("#{Res.prefix}screen/#{num}") do |f|
@@ -22,14 +24,14 @@ class Screen
         when 'exit'
           @exits[data[1].to_sym] = data[2].to_i
         when 'mana'
-          @manas << Mana.new(*data[1].split(',').map(&:to_i))
+          @pickups << Mana.new(*data[1].split(',').map(&:to_i))
         when 'word'
           pos = data[2].split(',').map(&:to_i)
-          @words << Word.new(data[1].to_sym, pos[0], pos[1])
+          @pickups << Word.new(data[1].to_sym, pos[0], pos[1])
         else
           bounds = data[1].split(',').map(&:to_i)
-          @objects << Obj.new(data[0].to_sym, bounds[0], bounds[1], bounds[2], bounds[3],
-                              data[2]&.split(',')&.map(&:to_sym))
+          @objects << Object.const_get(data[0].capitalize).new(bounds[0], bounds[1], bounds[2], bounds[3],
+                                                               data[2]&.split(',')&.map(&:to_sym))
         end
       end
     end
@@ -105,20 +107,15 @@ class Screen
 
   def update(man)
     @objects.each(&:update)
-    @manas.reverse_each do |m|
-      m.update(man)
-      @manas.delete(m) if m.dead
-    end
-    @words.reverse_each do |w|
-      w.update(man)
-      @words.delete(w) if w.dead
+    @pickups.reverse_each do |p|
+      p.update(man)
+      @pickups.delete(p) if p.dead
     end
   end
 
   def draw
     @bg_procs.each(&:call)
     @objects.each(&:draw)
-    @manas.each(&:draw)
-    @words.each(&:draw)
+    @pickups.each(&:draw)
   end
 end

@@ -9,7 +9,8 @@ class Word
   FULL_CIRCLE = 2 * Math::PI
   GLOW_ANGLE = 0.16667 * Math::PI
   GLOW_RADIUS = 100
-  GLOW_COLOR = Utils.with_alpha(Color::GOLD, 180)
+  GLOW_COLOR1 = Utils.with_alpha(Color::GOLD, 180)
+  GLOW_COLOR2 = Utils.with_alpha(Color::GOLD, 0)
 
   OBJS = %i[wall ledge water].freeze
 
@@ -54,7 +55,7 @@ class Word
       y1 = @c_y + r * Math.sin(a1) + d_y
       x2 = @c_x + r * Math.cos(a2)
       y2 = @c_y + r * Math.sin(a2) + d_y
-      G.window.draw_triangle(@c_x, @c_y + d_y, GLOW_COLOR, x1, y1, Color::GOLD_TRANSP, x2, y2, Color::GOLD_TRANSP, 0)
+      G.window.draw_triangle(@c_x, @c_y + d_y, GLOW_COLOR1, x1, y1, GLOW_COLOR2, x2, y2, GLOW_COLOR2, 0)
     end
 
     case @word
