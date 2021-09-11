@@ -1,7 +1,6 @@
 module Color
   BLACK = 0xff000000
   WHITE = 0xffffffff
-  BROWN = 0xff996600
   LIME = 0xff00ff00
   RED = 0xffff0000
   DARK_BLUE = 0xff000099

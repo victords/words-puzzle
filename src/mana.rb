@@ -11,6 +11,8 @@ class Mana
     @y = y
     @w = 24
     @h = 24
+    @x_c = @x + @w / 2
+    @y_c = @y + @h / 2
     @bounds = Rectangle.new(@x, @y, @w, @h)
 
     @timer = 0
@@ -31,9 +33,9 @@ class Mana
     c1 = Utils.lighten(Color::LIME, 0.5 + rate * 0.4)
     c2 = Utils.lighten(Color::LIME, rate * 0.5)
     c3 = Utils.darken(Color::LIME, 0.1 - rate * 0.07)
-    G.window.draw_triangle(@x, @y, c1, @x - @w / 2, @y, c1, @x, @y - @h / 2, c1, 0)
-    G.window.draw_triangle(@x, @y, c2, @x + @w / 2, @y, c2, @x, @y - @h / 2, c2, 0)
-    G.window.draw_triangle(@x, @y, c2, @x - @w / 2, @y, c2, @x, @y + @h / 2, c2, 0)
-    G.window.draw_triangle(@x, @y, c3, @x + @w / 2, @y, c3, @x, @y + @h / 2, c3, 0)
+    G.window.draw_triangle(@x_c, @y_c, c1, @x, @y_c, c1, @x_c, @y, c1, 0)
+    G.window.draw_triangle(@x_c, @y_c, c2, @x + @w, @y_c, c2, @x_c, @y, c2, 0)
+    G.window.draw_triangle(@x_c, @y_c, c2, @x, @y_c, c2, @x_c, @y + @h, c2, 0)
+    G.window.draw_triangle(@x_c, @y_c, c3, @x + @w, @y_c, c3, @x_c, @y + @h, c3, 0)
   end
 end

@@ -5,7 +5,6 @@ include MiniGL
 class Wall < Obj
   COLOR1 = 0xff333333
   COLOR2 = 0xff505050
-  COLOR3 = 0xff666666
 
   def initialize(x, y, w, h, props)
     super(x, y, w, h, props, [:solid])
