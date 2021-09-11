@@ -1,5 +1,6 @@
 require_relative 'constants'
 require_relative 'utils'
+require_relative 'particles'
 
 class Mana
   ANIM_CYCLE = 120
@@ -15,12 +16,15 @@ class Mana
     @y_c = @y + @h / 2
     @bounds = Rectangle.new(@x, @y, @w, @h)
 
+    @particles = Particles.new(:glow, @x - 5, @y - 5, Color::LIME, 5, 2, nil, Vector.new(@w + 10, @h + 10), 2)
+    @particles.start
     @timer = 0
   end
 
   def update(man)
     @timer += 1
     @timer = 0 if @timer == ANIM_CYCLE
+    @particles.update
 
     return unless man.bounds.intersect?(bounds)
 
@@ -37,5 +41,7 @@ class Mana
     G.window.draw_triangle(@x_c, @y_c, c2, @x + @w, @y_c, c2, @x_c, @y, c2, 0)
     G.window.draw_triangle(@x_c, @y_c, c2, @x, @y_c, c2, @x_c, @y + @h, c2, 0)
     G.window.draw_triangle(@x_c, @y_c, c3, @x + @w, @y_c, c3, @x_c, @y + @h, c3, 0)
+
+    @particles.draw
   end
 end

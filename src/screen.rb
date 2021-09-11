@@ -70,10 +70,10 @@ class Screen
     end
 
     unless @exits.has_key?(:left)
-      @objects << Obj.new(:immutable, -1, 0, 1, 600, [:solid])
+      @objects << Obj.new(-1, 0, 1, 600, [:solid])
     end
     unless @exits.has_key?(:right)
-      @objects << Obj.new(:immutable, 800, 0, 1, 600, [:solid])
+      @objects << Obj.new(800, 0, 1, 600, [:solid])
     end
   end
 

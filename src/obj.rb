@@ -16,7 +16,7 @@ class Obj
 
   HIGHLIGHT_CYCLE = 120
 
-  def initialize(x, y, w, h, props, default_props)
+  def initialize(x, y, w, h, props, default_props = [])
     @x = x
     @y = y
     @w = w
