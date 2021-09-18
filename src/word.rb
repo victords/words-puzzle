@@ -29,6 +29,9 @@ class Word
 
     @timer = 0
     @glow_angle = 0
+
+    require_relative "objs/#{word}"
+    @obj = Object.const_get(word.to_s.capitalize).new(@x, @y, @w, @h, [])
   end
 
   def update(man)
@@ -58,11 +61,9 @@ class Word
       G.window.draw_triangle(@c_x, @c_y + d_y, GLOW_COLOR1, x1, y1, GLOW_COLOR2, x2, y2, GLOW_COLOR2, 0)
     end
 
-    case @word
-    when :wall
-      G.window.draw_rect(@x, @y + d_y, @w, @h, Color::GRAY)
-    end
+    @obj.draw(0, d_y)
 
-    Text.draw(@word.to_s, @x + 10, @y + 3 + d_y, FONT_SIZE, false, Color::BLACK, 4)
+    Text.draw(@word.to_s, @x + 10, @y + 3 + d_y, FONT_SIZE, false, Color::BLACK, 6, 2)
+    Text.draw(@word.to_s, @x + 10, @y + 3 + d_y, FONT_SIZE, false, Color::WHITE, 2, 2)
   end
 end
