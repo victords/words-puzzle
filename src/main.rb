@@ -12,6 +12,7 @@ class Window < GameWindow
     super(Game::SCREEN_WIDTH, Game::SCREEN_HEIGHT)
 
     Res.prefix = File.expand_path(__FILE__).split('/')[0..-3].join('/') + '/data'
+    Res.retro_images = true
     Text.init
 
     @hud = Hud.new
