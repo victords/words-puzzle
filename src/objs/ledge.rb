@@ -10,8 +10,8 @@ class Ledge < Obj
   BASE_HEIGHT = 20
   HEIGHT_INCREMENT = 5
 
-  def initialize(x, y, w, h, props)
-    super(x, y, w, h, props, [:semisolid])
+  def initialize(x, y, w, h, _args)
+    super(x, y, w, h, [:semisolid])
   end
 
   def draw(x_offset = 0, y_offset = 0)

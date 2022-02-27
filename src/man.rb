@@ -28,21 +28,16 @@ class Man < GameObject
 
     @mana = 0
     @max_mana = Game::INITIAL_MAX_MANA
-    @spell_objs = []
+    @spell_objs = [:wall]
     @spell_props = [:sticky, :bouncy, :semisolid, :liquid]
 
     @spell_particles = Particles.new(:glow, 0, 0, Color::WHITE, 5, 1, 5, nil, 2)
     @mana_particles = Particles.new(:glow, 0, 0, Color::LIME, 100, 1, 0, nil, 4)
   end
 
-  def set_position(x, y = nil)
-    if x.is_a?(Vector)
-      @x = x.x
-      @y = x.y
-    else
-      @x = x
-      @y = y
-    end
+  def set_position(pos)
+    @x = pos.x * Graphics::TILE_SIZE + 2
+    @y = pos.y * Graphics::TILE_SIZE - (Physics::MAN_HEIGHT - Graphics::TILE_SIZE)
   end
 
   def update(screen)
@@ -150,10 +145,6 @@ class Man < GameObject
       animate([0, 1], 24)
     end
 
-    if @spell
-      @spell_particles.move(@x + @w + @wand_offset[1].x, @y + @wand_offset[1].y)
-    end
-
     @spell_particles.update
     @mana_particles.update
     return unless @mana_particles.playing
@@ -192,7 +183,7 @@ class Man < GameObject
   end
 
   def draw
-    super(nil, 2, 2)
+    super(nil, Graphics::SCALE, Graphics::SCALE)
 
     @spell_particles.draw
     @mana_particles.draw

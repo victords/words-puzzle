@@ -17,14 +17,19 @@ module Physics
 end
 
 module Game
-  SCREEN_WIDTH = 1280
-  SCREEN_HEIGHT = 720
   INITIAL_MAX_MANA = 3
   BG_MAP = {
     1 => 1,
     2 => 1,
     3 => 1,
   }.freeze
+end
+
+module Graphics
+  SCREEN_WIDTH = 1280
+  SCREEN_HEIGHT = 720
+  SCALE = 2
+  TILE_SIZE = 40
 end
 
 Vector = MiniGL::Vector

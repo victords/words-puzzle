@@ -8,8 +8,8 @@ class Mana
   attr_reader :bounds, :dead
 
   def initialize(x, y)
-    @x = x
-    @y = y
+    @x = x + 8
+    @y = y + 8
     @w = 24
     @h = 24
     @x_c = @x + @w / 2

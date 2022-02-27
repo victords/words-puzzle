@@ -25,7 +25,7 @@ class Hud
     @spell = { obj: obj, prop: prop, state: :obj }
     m_w_half = Physics::MAN_WIDTH / 2
     m_h = Physics::MAN_HEIGHT
-    scr_w = Game::SCREEN_WIDTH
+    scr_w = Graphics::SCREEN_WIDTH
     b_w = scr_w - 400
     b_offset = b_w / 4
     @balloon_arrow = [
@@ -78,7 +78,7 @@ class Hud
     G.window.draw_rect(@balloon[0] - 5, @balloon[1] - 5, @balloon[2] + 10, @balloon[3] + 10, Color::BLACK, nil, nil, 101)
     G.window.draw_rect(@balloon[0], @balloon[1], @balloon[2], @balloon[3], Color::WHITE, nil, nil, 102)
 
-    b_w = Game::SCREEN_WIDTH - 400
+    b_w = Graphics::SCREEN_WIDTH - 400
     Text.draw('make', @balloon[0] + b_w * 0.1, @balloon[1] + 30, 60, true, Color::BLACK, 4, 102)
     Text.draw(@spell[:obj], @balloon[0] + b_w * 0.4, @balloon[1] + 30, 60, true, Color::BLACK, 4, 102)
     Text.draw(@spell[:prop], @balloon[0] + b_w * 0.8, @balloon[1] + 30, 60, true, Color::BLACK, 4, 102)

@@ -16,13 +16,13 @@ class Obj
 
   HIGHLIGHT_CYCLE = 120
 
-  def initialize(x, y, w, h, props, default_props = [])
+  def initialize(x, y, w, h, default_props = [])
     @x = x
     @y = y
     @w = w
     @h = h
 
-    @props = Set.new(props || []) + default_props
+    @props = Set.new(default_props)
     @original_props = @props.clone
 
     @highlight_timer = 0

@@ -1,4 +1,3 @@
-require_relative 'objs/floor'
 require_relative 'objs/ledge'
 require_relative 'objs/wall'
 require_relative 'objs/water'
@@ -24,14 +23,13 @@ class Screen
         when 'exit'
           @exits[data[1].to_sym] = data[2].to_i
         when 'mana'
-          @pickups << Mana.new(*data[1].split(',').map(&:to_i))
+          @pickups << Mana.new(*data[1].split(',').map { |v| v.to_i * Graphics::TILE_SIZE })
         when 'word'
           pos = data[2].split(',').map(&:to_i)
           @pickups << Word.new(data[1].to_sym, pos[0], pos[1])
         else
-          bounds = data[1].split(',').map(&:to_i)
-          @objects << Object.const_get(data[0].capitalize).new(bounds[0], bounds[1], bounds[2], bounds[3],
-                                                               data[2]&.split(',')&.map(&:to_sym))
+          bounds = data[1].split(',').map { |v| v.to_i * Graphics::TILE_SIZE }
+          @objects << Object.const_get(data[0].capitalize).new(bounds[0], bounds[1], bounds[2], bounds[3], data[2])
         end
       end
     end
@@ -70,10 +68,10 @@ class Screen
     end
 
     unless @exits.has_key?(:left)
-      @objects << Obj.new(-1, 0, 1, 600, [:solid])
+      @objects << Obj.new(-1, 0, 1, Graphics::SCREEN_HEIGHT, [:solid])
     end
     unless @exits.has_key?(:right)
-      @objects << Obj.new(800, 0, 1, 600, [:solid])
+      @objects << Obj.new(Graphics::SCREEN_WIDTH, 0, 1, Graphics::SCREEN_HEIGHT, [:solid])
     end
   end
 
