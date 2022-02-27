@@ -2,13 +2,19 @@ require_relative 'constants'
 require_relative 'utils'
 
 class Hud
+  BALLOON_X_OFFSET = -40
   BALLOON_V_LIMIT = 200
+  BALLOON_WIDTH = Graphics::SCREEN_WIDTH - 400
+  BALLOON_HEIGHT = 120
   CYCLE_TIME = 60
 
   def initialize
     @max_mana = Game::INITIAL_MAX_MANA
     @mana = 0
     @timer = 0
+
+    @balloon = Res.imgs(:fx_balloon, 3, 3)
+    @balloon_arrow = Res.img(:fx_balloonArrow)
   end
 
   def update_mana(amount)
@@ -23,17 +29,17 @@ class Hud
 
   def start_spell(x, y, obj, prop)
     @spell = { obj: obj, prop: prop, state: :obj }
-    m_w_half = Physics::MAN_WIDTH / 2
-    m_h = Physics::MAN_HEIGHT
-    scr_w = Graphics::SCREEN_WIDTH
-    b_w = scr_w - 400
-    b_offset = b_w / 4
-    @balloon_arrow = [
-      x + m_w_half, y < BALLOON_V_LIMIT ? y + m_h : y - 10,
-      scr_w / 2 + (x > scr_w / 2 ? b_offset : -b_offset) - 20, y < BALLOON_V_LIMIT ? y + m_h + 50 : y - 60,
-      scr_w / 2 + (x > scr_w / 2 ? b_offset : -b_offset) + 20, y < BALLOON_V_LIMIT ? y + m_h + 50 : y - 60,
+    flip = y < BALLOON_V_LIMIT
+    @balloon_pos = [
+      # balloon coords
+      [[x + BALLOON_X_OFFSET, 0].max, Graphics::SCREEN_WIDTH - BALLOON_WIDTH].min,
+      flip ? y + Physics::MAN_HEIGHT + 32 : y - 152,
+      # balloon arrow coords
+      x + Physics::MAN_WIDTH / 2 - 16,
+      flip ? y + Physics::MAN_HEIGHT + 4 : y - 36,
+      # whether balloon arrow is flipped
+      flip
     ]
-    @balloon = [200, y < BALLOON_V_LIMIT ? y + m_h + 50 : y - 180, b_w, 120]
   end
 
   def update_spell(key, value)
@@ -69,28 +75,34 @@ class Hud
 
     return unless @spell
 
-    G.window.draw_triangle(@balloon_arrow[0], @balloon_arrow[1], Color::BLACK,
-                           @balloon_arrow[2] - 10, @balloon_arrow[3], Color::BLACK,
-                           @balloon_arrow[4] + 10, @balloon_arrow[5], Color::BLACK, 101)
-    G.window.draw_triangle(@balloon_arrow[0], @balloon_arrow[1], Color::WHITE,
-                           @balloon_arrow[2], @balloon_arrow[3], Color::WHITE,
-                           @balloon_arrow[4], @balloon_arrow[5], Color::WHITE, 102)
-    G.window.draw_rect(@balloon[0] - 5, @balloon[1] - 5, @balloon[2] + 10, @balloon[3] + 10, Color::BLACK, nil, nil, 101)
-    G.window.draw_rect(@balloon[0], @balloon[1], @balloon[2], @balloon[3], Color::WHITE, nil, nil, 102)
+    b_x = @balloon_pos[0]
+    b_y = @balloon_pos[1]
+    b_w = BALLOON_WIDTH
+    b_h = BALLOON_HEIGHT
+    sc = Graphics::SCALE
+    @balloon[0].draw(b_x, b_y, 101, sc, sc)
+    @balloon[1].draw(b_x + 6, b_y, 101, (b_w - 12).to_f / 3, sc)
+    @balloon[2].draw(b_x + b_w - 6, b_y, 101, sc, sc)
+    @balloon[3].draw(b_x, b_y + 6, 101, sc, (b_h - 12).to_f / 3)
+    @balloon[4].draw(b_x + 6, b_y + 6, 101, (b_w - 12).to_f / 3, (b_h - 12).to_f / 3)
+    @balloon[5].draw(b_x + b_w - 6, b_y + 6, 101, sc, (b_h - 12).to_f / 3)
+    @balloon[6].draw(b_x, b_y + b_h - 6, 101, sc, sc)
+    @balloon[7].draw(b_x + 6, b_y + b_h - 6, 101, (b_w - 12).to_f / 3, sc)
+    @balloon[8].draw(b_x + b_w - 6, b_y + b_h - 6, 101, sc, sc)
+    @balloon_arrow.draw(@balloon_pos[2], @balloon_pos[3], 101, sc, @balloon_pos[4] ? -sc : sc)
 
-    b_w = Graphics::SCREEN_WIDTH - 400
-    Text.draw('make', @balloon[0] + b_w * 0.1, @balloon[1] + 30, 60, true, Color::BLACK, 4, 102)
-    Text.draw(@spell[:obj], @balloon[0] + b_w * 0.4, @balloon[1] + 30, 60, true, Color::BLACK, 4, 102)
-    Text.draw(@spell[:prop], @balloon[0] + b_w * 0.8, @balloon[1] + 30, 60, true, Color::BLACK, 4, 102)
+    Text.draw('make', b_x + b_w * 0.1, b_y + 30, 60, true, Color::BLACK, 4, 102)
+    Text.draw(@spell[:obj], b_x + b_w * 0.4, b_y + 30, 60, true, Color::BLACK, 4, 102)
+    Text.draw(@spell[:prop], b_x + b_w * 0.8, b_y + 30, 60, true, Color::BLACK, 4, 102)
 
-    outline_x = @balloon[0] + b_w * (@spell[:state] == :obj ? 0.4 : 0.8) - 150
-    G.window.draw_outline_rect(outline_x, @balloon[1] + 15, 300, 90, Color::GRAY, 1, 102)
+    outline_x = b_x + b_w * (@spell[:state] == :obj ? 0.4 : 0.8) - 150
+    G.window.draw_outline_rect(outline_x, b_y + 15, 300, 90, Color::GRAY, 1, 102)
     delta_y = Utils.alternating_rate(@timer, CYCLE_TIME) * 5
-    G.window.draw_triangle(outline_x + 135, @balloon[1] + 25 - delta_y, Color::GOLD,
-                           outline_x + 165, @balloon[1] + 25 - delta_y, Color::GOLD,
-                           outline_x + 150, @balloon[1] + 5 - delta_y, Color::GOLD, 102)
-    G.window.draw_triangle(outline_x + 135, @balloon[1] + 95 + delta_y, Color::GOLD,
-                           outline_x + 165, @balloon[1] + 95 + delta_y, Color::GOLD,
-                           outline_x + 150, @balloon[1] + 115 + delta_y, Color::GOLD, 102)
+    G.window.draw_triangle(outline_x + 135, b_y + 25 - delta_y, Color::GOLD,
+                           outline_x + 165, b_y + 25 - delta_y, Color::GOLD,
+                           outline_x + 150, b_y + 5 - delta_y, Color::GOLD, 102)
+    G.window.draw_triangle(outline_x + 135, b_y + 95 + delta_y, Color::GOLD,
+                           outline_x + 165, b_y + 95 + delta_y, Color::GOLD,
+                           outline_x + 150, b_y + 115 + delta_y, Color::GOLD, 102)
   end
 end

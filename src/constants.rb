@@ -14,6 +14,7 @@ module Physics
   MAN_WIDTH = 36
   MAN_HEIGHT = 96
   LIQUID_GRAVITY_SCALE = 0.4
+  STICKY_ACCEL_SCALE = 0.3
 end
 
 module Game

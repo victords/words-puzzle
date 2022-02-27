@@ -64,14 +64,14 @@ class Man < GameObject
       end
       speed.x = -BRAKE_RATE * @speed.x
     else
-      if KB.key_pressed?(Gosu::KB_Z) && @mana > 0 && @spell_objs.any? && @spell_props.any?
+      if @bottom && KB.key_pressed?(Gosu::KB_Z) && @mana > 0 && @spell_objs.any? && @spell_props.any?
         @spell = { obj: @spell_objs[0], prop: @spell_props[0], state: :obj }
         @on_start_spell.call(@x, @y, @spell[:obj], @spell[:prop])
         @spell_particles.start
       elsif KB.key_down?(Gosu::KB_RIGHT)
-        speed.x += MOVE_FORCE
+        speed.x += MOVE_FORCE * (@bottom&.sticky? ? Physics::STICKY_ACCEL_SCALE : 1)
       elsif KB.key_down?(Gosu::KB_LEFT)
-        speed.x -= MOVE_FORCE
+        speed.x -= MOVE_FORCE * (@bottom&.sticky? ? Physics::STICKY_ACCEL_SCALE : 1)
       else
         speed.x = -BRAKE_RATE * @speed.x
       end
@@ -91,11 +91,15 @@ class Man < GameObject
       G.gravity *= Physics::LIQUID_GRAVITY_SCALE
       @max_speed *= Physics::LIQUID_GRAVITY_SCALE
       speed *= Physics::LIQUID_GRAVITY_SCALE
+    elsif @bottom&.sticky?
+      @max_speed.x *= Physics::STICKY_ACCEL_SCALE
     end
     move(speed, screen.get_obstacles, [])
     if inside_liquid
       G.gravity = prev_g
       @max_speed = Vector.new(MAX_H_SPEED, MAX_V_SPEED)
+    elsif @bottom&.sticky?
+      @max_speed.x = MAX_H_SPEED
     end
 
     if @left&.bouncy? || @right&.bouncy?
