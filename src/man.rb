@@ -67,6 +67,7 @@ class Man < GameObject
       if @bottom && KB.key_pressed?(Gosu::KB_Z) && @mana > 0 && @spell_objs.any? && @spell_props.any?
         @spell = { obj: @spell_objs[0], prop: @spell_props[0], state: :obj }
         @on_start_spell.call(@x, @y, @spell[:obj], @spell[:prop])
+        @spell_particles.move(@x + 72, @y - 10)
         @spell_particles.start
       elsif KB.key_down?(Gosu::KB_RIGHT)
         speed.x += MOVE_FORCE * (@bottom&.sticky? ? Physics::STICKY_ACCEL_SCALE : 1)

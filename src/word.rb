@@ -1,6 +1,5 @@
 require_relative 'constants'
 require_relative 'utils'
-require_relative 'text'
 
 class Word
   FONT_SIZE = 50

@@ -2,7 +2,6 @@ require 'minigl'
 require_relative 'screen'
 require_relative 'man'
 require_relative 'hud'
-require_relative 'text'
 require_relative 'word'
 
 include MiniGL
@@ -13,7 +12,7 @@ class Window < GameWindow
 
     Res.prefix = File.expand_path(__FILE__).split('/')[0..-3].join('/') + '/data'
     Res.retro_images = true
-    Text.init
+    Graphics::init_font
 
     @hud = Hud.new
     @man = Man.new

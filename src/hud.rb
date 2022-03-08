@@ -91,9 +91,9 @@ class Hud
     @balloon[8].draw(b_x + b_w - 6, b_y + b_h - 6, 101, sc, sc)
     @balloon_arrow.draw(@balloon_pos[2], @balloon_pos[3], 101, sc, @balloon_pos[4] ? -sc : sc)
 
-    Text.draw('make', b_x + b_w * 0.1, b_y + 30, 60, true, Color::BLACK, 4, 102)
-    Text.draw(@spell[:obj], b_x + b_w * 0.4, b_y + 30, 60, true, Color::BLACK, 4, 102)
-    Text.draw(@spell[:prop], b_x + b_w * 0.8, b_y + 30, 60, true, Color::BLACK, 4, 102)
+    Graphics::font.draw_text_rel('MAKE', b_x + b_w * 0.1, b_y + 27, 102, 0.5, 0, 6, 6, Color::BLACK)
+    Graphics::font.draw_text_rel(@spell[:obj].upcase, b_x + b_w * 0.4, b_y + 27, 102, 0.5, 0, 6, 6, Color::BLACK)
+    Graphics::font.draw_text_rel(@spell[:prop].upcase, b_x + b_w * 0.8, b_y + 27, 102, 0.5, 0, 6, 6, Color::BLACK)
 
     outline_x = b_x + b_w * (@spell[:state] == :obj ? 0.4 : 0.8) - 150
     G.window.draw_outline_rect(outline_x, b_y + 15, 300, 90, Color::GRAY, 1, 102)
