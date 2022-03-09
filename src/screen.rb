@@ -25,11 +25,11 @@ class Screen
         when 'mana'
           @pickups << Mana.new(*data[1].split(',').map { |v| v.to_i * Graphics::TILE_SIZE })
         when 'word'
-          pos = data[2].split(',').map(&:to_i)
+          pos = data[2].split(',').map { |v| v.to_i * Graphics::TILE_SIZE }
           @pickups << Word.new(data[1].to_sym, pos[0], pos[1])
         else
           bounds = data[1].split(',').map { |v| v.to_i * Graphics::TILE_SIZE }
-          @objects << Object.const_get(data[0].capitalize).new(bounds[0], bounds[1], bounds[2], bounds[3], data[2])
+          @objects << Object.const_get(data[0].capitalize).new(bounds[0], bounds[1], bounds[2], bounds[3])
         end
       end
     end

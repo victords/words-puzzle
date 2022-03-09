@@ -26,7 +26,7 @@ module Game
   }.freeze
 end
 
-module Graphics
+class Graphics
   include MiniGL
 
   SCREEN_WIDTH = 1280
@@ -34,17 +34,18 @@ module Graphics
   SCALE = 2
   TILE_SIZE = 40
 
-  def self.init_font
-    @font = ImageFont.new(:font_font, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÁÉÍÓÚÀÃÕÂÊÔÑÇáéíóúàãõâêôñç0123456789.,:;!?¡¿/\\()[]+-%'\"←→∞$ĞğİıÖöŞşÜüĈĉĜĝĤĥĴĵŜŝŬŭ",
-                          [5, 5, 5, 5, 5, 5, 5, 5, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-                           5, 5, 5, 5, 5, 3, 5, 5, 1, 3, 4, 2, 7, 5, 5, 5, 5, 4, 5, 3, 5, 5, 7, 5, 5, 5,
-                           5, 5, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-                           5, 3, 5, 5, 5, 5, 5, 5, 5, 5, 1, 2, 1, 2, 1, 5, 1, 5, 4, 4, 2, 2, 2, 2, 5, 3, 5, 1, 3, 7, 7,
-                           9, 5, 5, 5, 1, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 4, 5, 5, 5, 5], 11, 3, 1)
-  end
+  class << self
+    attr_reader :font, :text_helper
 
-  def self.font
-    @font
+    def init_font
+      @font = ImageFont.new(:font_font, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÁÉÍÓÚÀÃÕÂÊÔÑÇáéíóúàãõâêôñç0123456789.,:;!?¡¿/\\()[]+-%'\"←→∞$ĞğİıÖöŞşÜüĈĉĜĝĤĥĴĵŜŝŬŭ",
+                            [5, 5, 5, 5, 5, 5, 5, 5, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                             5, 5, 5, 5, 5, 3, 5, 5, 1, 3, 4, 2, 7, 5, 5, 5, 5, 4, 5, 3, 5, 5, 7, 5, 5, 5,
+                             5, 5, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+                             5, 3, 5, 5, 5, 5, 5, 5, 5, 5, 1, 2, 1, 2, 1, 5, 1, 5, 4, 4, 2, 2, 2, 2, 5, 3, 5, 1, 3, 7, 7,
+                             9, 5, 5, 5, 1, 1, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 4, 5, 5, 5, 5], 11, 3, 1)
+      @text_helper = TextHelper.new(@font, Graphics::SCALE, Graphics::SCALE)
+    end
   end
 end
 

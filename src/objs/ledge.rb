@@ -10,7 +10,7 @@ class Ledge < Obj
   BASE_HEIGHT = 20
   HEIGHT_INCREMENT = 5
 
-  def initialize(x, y, w, h, _args)
+  def initialize(x, y, w, h)
     super(x, y, w, h, [:semisolid])
   end
 

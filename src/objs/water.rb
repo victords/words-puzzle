@@ -5,7 +5,7 @@ include MiniGL
 class Water < Obj
   ANIM_INTERVAL = 12
 
-  def initialize(x, y, w, h, _args)
+  def initialize(x, y, w, h)
     super(x, y, w, h, [:liquid])
     @img = Res.tileset('1', 20, 20)[2..4]
     @img_index = 0

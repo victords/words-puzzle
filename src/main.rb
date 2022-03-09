@@ -12,7 +12,7 @@ class Window < GameWindow
 
     Res.prefix = File.expand_path(__FILE__).split('/')[0..-3].join('/') + '/data'
     Res.retro_images = true
-    Graphics::init_font
+    Graphics.init_font
 
     @hud = Hud.new
     @man = Man.new
