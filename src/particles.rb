@@ -69,7 +69,7 @@ class Particles
     return unless @playing
 
     @elements.each do |e|
-      alpha = (Utils.alternating_rate(e.instance_eval('@timer'), @duration) * 255).round
+      alpha = (Utils.alternating_rate(e.elapsed_time, @duration) * 255).round
       e.draw(nil, Graphics::SCALE, Graphics::SCALE, alpha, @color & 0xffffff, @z_index)
     end
   end
