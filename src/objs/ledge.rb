@@ -4,26 +4,34 @@ require_relative '../constants'
 include MiniGL
 
 class Ledge < Obj
-  COLOR1 = 0xff505050
-  COLOR2 = 0xff808080
-  BASE_WIDTH = 50
-  BASE_HEIGHT = 20
-  HEIGHT_INCREMENT = 5
-
   def initialize(x, y, w, h)
     super(x, y, w, h, [:semisolid])
+    @tiles = Res.tileset('1', 20, 20)
   end
 
-  def draw(x_offset = 0, y_offset = 0)
-    n = @w / BASE_WIDTH
-    w = @w / n.to_f
-    half = (n - 1) / 2.0
+  def draw
+    n = @w / Graphics::TILE_SIZE
     (0...n).each do |i|
-      h = BASE_HEIGHT + (half - (i - half).abs) * HEIGHT_INCREMENT
-      G.window.draw_rect(@x + i * w + x_offset, @y + y_offset, w, h, COLOR1)
-      G.window.draw_rect(@x + i * w + 2 + x_offset, @y + 2 + y_offset, w - 4, h - 4, COLOR2)
+      tile_index = if n >= 5
+                     if i >= 2 && i < n - 2
+                       7
+                     elsif i == 1 || i == n - 2
+                       6
+                     else
+                       5
+                     end
+                   elsif n >= 3
+                     if i >= 1 && i < n - 1
+                       6
+                     else
+                       5
+                     end
+                   else
+                     5
+                   end
+      @tiles[tile_index].draw(@x + i * Graphics::TILE_SIZE, @y, 0, Graphics::SCALE, Graphics::SCALE)
     end
 
-    super()
+    super
   end
 end

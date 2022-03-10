@@ -7,3 +7,10 @@ mana:10,15
 mana:12,15
 water:20,15,5,2
 word:wall:15,10
+ledge:0,3,1,1
+ledge:0,4,2,1
+ledge:0,5,3,1
+ledge:0,6,4,1
+ledge:0,7,5,1
+ledge:0,8,6,1
+ledge:0,9,7,1

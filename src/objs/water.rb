@@ -22,7 +22,7 @@ class Water < Obj
     end
   end
 
-  def draw(x_offset = 0, y_offset = 0)
+  def draw
     x_count = @w / Graphics::TILE_SIZE
     y_count = @h / Graphics::TILE_SIZE
     (0...x_count).each do |i|
@@ -34,6 +34,6 @@ class Water < Obj
       end
     end
 
-    super()
+    super
   end
 end

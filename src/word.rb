@@ -15,7 +15,7 @@ class Word < MiniGL::GameObject
   end
 
   def update(man)
-    animate([0, 1, 2, 1], 8)
+    animate([0, 1, 2, 1], 12)
 
     @cycle, @y = Utils.sinoid(@cycle)
     @y += @start_y
