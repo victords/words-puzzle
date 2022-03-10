@@ -28,10 +28,10 @@ class Man < GameObject
 
     @mana = 0
     @max_mana = Game::INITIAL_MAX_MANA
-    @spell_objs = [:wall]
+    @spell_objs = [:floor]
     @spell_props = [:sticky, :bouncy, :semisolid, :liquid]
 
-    @spell_particles = Particles.new(:glow, 0, 0, Color::WHITE, 5, 1, 15, nil, 2)
+    @spell_particles = Particles.new(:glow, 0, 0, Color::WHITE, 3, 1, 15, nil, 2)
     @mana_particles = Particles.new(:glow, 0, 0, Color::LIME, 100, 1, 0, nil, 4)
   end
 

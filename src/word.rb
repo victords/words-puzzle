@@ -3,7 +3,6 @@ require_relative 'utils'
 
 class Word < MiniGL::GameObject
   OBJS = %i[wall ledge water].freeze
-  CYCLE_STEP = Math::PI * 0.025
 
   attr_reader :dead
 
@@ -18,9 +17,8 @@ class Word < MiniGL::GameObject
   def update(man)
     animate([0, 1, 2, 1], 8)
 
-    @cycle += CYCLE_STEP
-    @cycle = 0 if @cycle >= 2 * Math::PI
-    @y = @start_y + 4 * Math.sin(@cycle)
+    @cycle, @y = Utils.sinoid(@cycle)
+    @y += @start_y
 
     return unless man.bounds.intersect?(bounds)
 
