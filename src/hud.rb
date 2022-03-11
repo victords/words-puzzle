@@ -13,8 +13,10 @@ class Hud
     @mana = 0
     @timer = 0
 
+    @mana_slot = Res.img(:fx_manaSlot)
     @balloon = Res.imgs(:fx_balloon, 3, 3)
     @balloon_arrow = Res.img(:fx_balloonArrow)
+    @arrow = Res.img(:fx_arrow)
   end
 
   def update_mana(amount)
@@ -66,11 +68,12 @@ class Hud
   end
 
   def draw
+    sc = Graphics::SCALE
+
     G.window.draw_rect(10, 10, 2 + @max_mana * 82, 40, Color::BLACK, nil, nil, 100)
     (0...@mana).each do |i|
-      color = @mana_alpha_change && i == @mana - 1 ? Utils.with_alpha(Color::LIME, @mana_alpha) : Color::LIME
-      color2 = Utils.darken(color, 0.4)
-      G.window.draw_rect(12 + i * 82, 12, 80, 36, color, color2, nil, 101)
+      color = @mana_alpha_change && i == @mana - 1 ? (@mana_alpha << 24) | 0xffffff : 0xffffffff
+      @mana_slot.draw(12 + i * 82, 12, 101, sc, sc, color)
     end
 
     return unless @spell
@@ -79,7 +82,6 @@ class Hud
     b_y = @balloon_pos[1]
     b_w = BALLOON_WIDTH
     b_h = BALLOON_HEIGHT
-    sc = Graphics::SCALE
     @balloon[0].draw(b_x, b_y, 101, sc, sc)
     @balloon[1].draw(b_x + 6, b_y, 101, (b_w - 12).to_f / 3, sc)
     @balloon[2].draw(b_x + b_w - 6, b_y, 101, sc, sc)
@@ -96,13 +98,9 @@ class Hud
     Graphics.font.draw_text_rel(@spell[:prop].upcase, b_x + b_w * 0.8, b_y + 27, 102, 0.5, 0, 6, 6, Color::BLACK)
 
     outline_x = b_x + b_w * (@spell[:state] == :obj ? 0.4 : 0.8) - 150
-    G.window.draw_outline_rect(outline_x, b_y + 15, 300, 90, Color::GRAY, 1, 102)
+    G.window.draw_outline_rect(outline_x, b_y + 15, 300, 90, Color::GRAY, 2, 102)
     delta_y = Utils.alternating_rate(@timer, CYCLE_TIME) * 5
-    G.window.draw_triangle(outline_x + 135, b_y + 25 - delta_y, Color::GOLD,
-                           outline_x + 165, b_y + 25 - delta_y, Color::GOLD,
-                           outline_x + 150, b_y + 5 - delta_y, Color::GOLD, 102)
-    G.window.draw_triangle(outline_x + 135, b_y + 95 + delta_y, Color::GOLD,
-                           outline_x + 165, b_y + 95 + delta_y, Color::GOLD,
-                           outline_x + 150, b_y + 115 + delta_y, Color::GOLD, 102)
+    @arrow.draw(outline_x + 130, b_y + 5 - delta_y, 102, sc, sc)
+    @arrow.draw(outline_x + 130, b_y + 115 + delta_y, 102, sc, -sc)
   end
 end
