@@ -19,11 +19,6 @@ end
 
 module Game
   INITIAL_MAX_MANA = 3
-  BG_MAP = {
-    1 => 1,
-    2 => 1,
-    3 => 1,
-  }.freeze
 end
 
 class Graphics

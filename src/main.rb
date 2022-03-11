@@ -100,7 +100,6 @@ class Window < GameWindow
   end
 
   def draw
-    clear @screen.bg_color
     @screen.draw
     @man.draw
     @hud.draw
