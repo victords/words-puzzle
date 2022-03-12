@@ -15,6 +15,7 @@ class Man < GameObject
   ANIM_WALK_CYCLE = 40
   ANIM_SPELL_CYCLE = 60
 
+  attr_reader :mana
   attr_writer :on_leave,
               :on_start_spell,
               :on_update_spell,
@@ -32,7 +33,6 @@ class Man < GameObject
     @spell_props = [:sticky, :bouncy, :semisolid, :liquid]
 
     @spell_particles = Particles.new(:glow, 0, 0, Color::WHITE, 3, 1, 15, nil, 2)
-    @mana_particles = Particles.new(:glow, 0, 0, Color::LIME, 100, 1, 0, nil, 4)
   end
 
   def set_position(pos)
@@ -147,16 +147,6 @@ class Man < GameObject
     end
 
     @spell_particles.update
-    @mana_particles.update
-    return unless @mana_particles.playing
-
-    d_x = 52 + (@mana - 1) * 82 - @mana_particles.x
-    d_y = 30 - @mana_particles.y
-    if d_x.abs <= 0.1 && d_y.abs <= 0.1
-      @mana_particles.stop
-    else
-      @mana_particles.move(@mana_particles.x + d_x * 0.05, @mana_particles.y + d_y * 0.05)
-    end
   end
 
   def change_spell_word(delta)
@@ -175,8 +165,6 @@ class Man < GameObject
 
     @mana += amount
     @on_mana_change.call(@mana)
-    @mana_particles.move(@x + @w / 2, @y + @h / 2)
-    @mana_particles.start
   end
 
   def add_word(word, type)
@@ -187,6 +175,5 @@ class Man < GameObject
     super(nil, Graphics::SCALE, Graphics::SCALE)
 
     @spell_particles.draw
-    @mana_particles.draw
   end
 end

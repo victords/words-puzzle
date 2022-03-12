@@ -12,6 +12,7 @@ class Word < MiniGL::GameObject
     @type = OBJS.include?(word) ? :obj : :prop
     @start_y = @y
     @cycle = 0
+    @particles = Particles.new(:glow, @x, @y, Color::WHITE, 10, 1, nil, Vector.new(@w, @h)).start
   end
 
   def update(man)
@@ -19,6 +20,8 @@ class Word < MiniGL::GameObject
 
     @cycle, @y = Utils.sinoid(@cycle)
     @y += @start_y
+
+    @particles.update
 
     return unless man.bounds.intersect?(bounds)
 
@@ -29,5 +32,6 @@ class Word < MiniGL::GameObject
   def draw
     super(nil, Graphics::SCALE, Graphics::SCALE)
     Graphics::text_helper.write_line(@word.to_s.upcase, @x + @w / 2, @y + 2, :center, 0xffffff, 255, :border, 0, 2, 255, 0, 4, 4)
+    @particles.draw
   end
 end

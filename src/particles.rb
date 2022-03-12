@@ -8,7 +8,7 @@ class Particles
 
   attr_reader :playing, :x, :y
 
-  def initialize(type, x, y, color, emission_rate, duration, spread_rate = 10, area = nil, scale = 1, z_index = 0)
+  def initialize(type, x, y, color, emission_rate, duration, spread_rate = 10, area = nil, z_index = 0)
     @type = type
     @sprite_cols, @sprite_rows, @indices =
       case type
@@ -24,7 +24,6 @@ class Particles
     @duration = duration * FRAMES_PER_SECOND
     @spread_rate = spread_rate
     @area = area
-    @scale = scale
     @z_index = z_index
 
     @elements = []
@@ -58,6 +57,7 @@ class Particles
 
   def start
     @playing = true
+    self
   end
 
   def stop
@@ -65,9 +65,11 @@ class Particles
     @timer = 0
   end
 
-  def draw
-    return unless @playing
+  def element_count
+    @elements.count
+  end
 
+  def draw
     @elements.each do |e|
       alpha = (Utils.alternating_rate(e.elapsed_time, @duration) * 255).round
       e.draw(nil, Graphics::SCALE, Graphics::SCALE, alpha, @color & 0xffffff, @z_index)

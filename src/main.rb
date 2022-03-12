@@ -63,27 +63,6 @@ class Window < GameWindow
     close if KB.key_pressed?(Gosu::KB_ESCAPE)
   end
 
-  def draw_circle(x, y, diam, color, detail = nil, z_index = 0)
-    detail ||= 12
-    r = diam / 2.0
-    c_x = x + r
-    c_y = y + r
-    d_f = detail.to_f
-    last_a = last_x = last_y = nil
-    (0...detail).each do |i|
-      a1 = last_a || i / d_f * 2 * Math::PI
-      a2 = (i + 1) / d_f * 2 * Math::PI
-      x1 = last_x || c_x + r * Math.cos(a1)
-      y1 = last_y || c_y + r * Math.sin(a1)
-      x2 = c_x + r * Math.cos(a2)
-      y2 = c_y + r * Math.sin(a2)
-      draw_triangle(c_x, c_y, color, x1, y1, color, x2, y2, color, z_index)
-      last_a = a2
-      last_x = x2
-      last_y = y2
-    end
-  end
-
   def draw_rect(x, y, w, h, color, color2 = nil, horiz = false, z_index = 0)
     draw_quad(x, y, color,
               x + w, y, horiz ? (color2 || color) : color,

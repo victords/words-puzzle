@@ -40,6 +40,8 @@ class Screen
     unless @exits.has_key?(:right)
       @objects << Obj.new(Graphics::SCREEN_WIDTH, 0, 1, Graphics::SCREEN_HEIGHT, [:solid])
     end
+
+    @particles = []
   end
 
   def entrance(id)
@@ -74,7 +76,49 @@ class Screen
     @objects.each(&:update)
     @pickups.reverse_each do |p|
       p.update(man)
-      @pickups.delete(p) if p.dead
+      next unless p.dead
+
+      case p
+      when Mana
+        @particles << {
+          particles: Particles.new(:glow, p.x + p.w / 2, p.y + p.h / 2, Color::LIME, 100, 1, 0).start,
+          mana: man.mana,
+          update: lambda do |obj|
+            pt = obj[:particles]
+            d_x = 52 + (obj[:mana] - 1) * 82 - pt.x
+            d_y = 30 - pt.y
+            if d_x.abs <= 0.1 && d_y.abs <= 0.1
+              pt.stop
+              return false
+            else
+              pt.move(pt.x + d_x * 0.05, pt.y + d_y * 0.05)
+            end
+            true
+          end
+        }
+      when Word
+        @particles << (pt = {
+          particles: Particles.new(:glow, p.x, p.y, Color::WHITE, 10, 1, 0, Vector.new(p.w, p.h)).start,
+          timer: 60,
+          update: lambda do |obj|
+            if obj[:timer] <= 1
+              obj[:particles].stop
+              return false
+            end
+
+            obj[:timer] -= 1
+          end
+        })
+        30.times { pt[:particles].update }
+      end
+      @pickups.delete(p)
+    end
+
+    @particles.reverse_each do |p|
+      p[:particles].update
+      next if p[:update].call(p)
+
+      @particles.delete(p) if p[:particles].element_count.zero?
     end
   end
 
@@ -82,5 +126,6 @@ class Screen
     @bg.draw(0, 0, 0, Graphics::SCALE, Graphics::SCALE)
     @objects.each(&:draw)
     @pickups.each(&:draw)
+    @particles.each { |p| p[:particles].draw }
   end
 end
