@@ -1,7 +1,8 @@
 require_relative 'objs/ledge'
+require_relative 'objs/slime'
+require_relative 'objs/spring'
 require_relative 'objs/wall'
 require_relative 'objs/water'
-require_relative 'objs/spring'
 require_relative 'mana'
 
 include MiniGL
