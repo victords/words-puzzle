@@ -1,7 +1,4 @@
-- Spring (default: bouncy)
-- Slime (default: sticky)
 - New properties [default object]
   - Burn/freeze [lava/ice]
   - Move/stop [elevator] (?)
   - Attract/repel [magnet]
-  -
