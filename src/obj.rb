@@ -67,7 +67,7 @@ class Obj
     end
   end
 
-  def update
+  def update(_man)
     @particles.update
 
     return unless @highlight

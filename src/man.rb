@@ -102,12 +102,8 @@ class Man < GameObject
     if @left&.bouncy? || @right&.bouncy?
       @stored_forces.x = @left ? MAX_H_SPEED : -MAX_H_SPEED
     end
-    if @top&.bouncy? && @speed.y == 0
-      @stored_forces.y = -@prev_speed.y
-    end
-    if @bottom&.bouncy? && @speed.y == 0
-      @stored_forces.y = -JUMP_FORCE
-    end
+    @stored_forces.y = -@prev_speed.y if @top&.bouncy? && @speed.y == 0
+    @stored_forces.y = -JUMP_FORCE if @bottom&.bouncy? && @speed.y == 0
 
     if @x < -@w / 2
       @on_leave.call(:left)

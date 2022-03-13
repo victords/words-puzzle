@@ -12,7 +12,7 @@ class Water < Obj
     @timer = 0
   end
 
-  def update
+  def update(_man)
     super
 
     @timer += 1

@@ -1,6 +1,7 @@
 require_relative 'objs/ledge'
 require_relative 'objs/wall'
 require_relative 'objs/water'
+require_relative 'objs/spring'
 require_relative 'mana'
 
 include MiniGL
@@ -73,7 +74,7 @@ class Screen
   end
 
   def update(man)
-    @objects.each(&:update)
+    @objects.each { |o| o.update(man) }
     @pickups.reverse_each do |p|
       p.update(man)
       next unless p.dead
