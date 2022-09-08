@@ -1,3 +1,3 @@
 source 'https://rubygems.org'
 
-gem 'minigl', '~> 2.3.8'
+gem 'minigl', '>= 2.4.1'
